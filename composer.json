@@ -8,12 +8,12 @@
     ],
     "require": {
         "php": "^7.3",
-        "thecodingmachine/safe": "^0.1.15"
+        "thecodingmachine/safe": "^1.0"
     },
     "require-dev": {
-        "brainbits/phpcs-standard": "^3.0@dev",
+        "brainbits/phpcs-standard": "^4.0@dev",
         "phpunit/phpunit": "^8.0",
-        "thecodingmachine/phpstan-safe-rule": "^0.1.3",
+        "thecodingmachine/phpstan-safe-rule": "^1.0",
         "jangregor/phpstan-prophecy": "^0.4.0",
         "phpstan/phpstan-phpunit": "^0.11.0"
     },
