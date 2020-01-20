@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FnTests\Exception;
+namespace FncTests\Exception;
 
-use Fn\Exception\ElementNotFound;
+use Fnc\Exception\ElementNotFound;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Fn\Exception\ElementNotFound
+ * @covers \Fnc\Exception\ElementNotFound
  */
 final class ElementNotFoundTest extends TestCase
 {

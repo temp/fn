@@ -2,11 +2,11 @@
 
 include __DIR__.'/../vendor/autoload.php';
 
-use function Fn\always;
-use function Fn\contains;
-use function Fn\ifElse;
-use function Fn\pipe;
-use function Fn\prop;
+use function Fnc\always;
+use function Fnc\contains;
+use function Fnc\ifElse;
+use function Fnc\pipe;
+use function Fnc\prop;
 
 $data = [
     'file_name' => 'test.jpeg',

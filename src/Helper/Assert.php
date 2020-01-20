@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Fn\Helper;
+namespace Fnc\Helper;
 
 use function is_array;
 use function is_callable;

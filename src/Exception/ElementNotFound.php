@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Fn\Exception;
+namespace Fnc\Exception;
 
 use InvalidArgumentException;
 use function Safe\sprintf;

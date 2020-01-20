@@ -2,11 +2,11 @@
 
 include __DIR__.'/../vendor/autoload.php';
 
-use function Fn\arr;
-use function Fn\compose;
-use function Fn\pipe;
-use function Fn\prop;
-use function Fn\take;
+use function Fnc\arr;
+use function Fnc\compose;
+use function Fnc\pipe;
+use function Fnc\prop;
+use function Fnc\take;
 
 $data = [
     'abc' => 'def',

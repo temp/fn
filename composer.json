@@ -19,13 +19,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Fn\\": "src/"
+            "Fnc\\": "src/"
         },
         "files": ["src/functions.php"]
     },
     "autoload-dev": {
         "psr-4": {
-            "FnTests\\": "tests/"
+            "FncTests\\": "tests/"
         }
     },
     "extra": {

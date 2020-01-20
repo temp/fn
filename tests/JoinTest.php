@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FnTests;
+namespace FncTests;
 
 use PHPUnit\Framework\TestCase;
-use function Fn\join;
+use function Fnc\join;
 
 /**
- * @covers \Fn\Join
+ * @covers \Fnc\Join
  */
 final class JoinTest extends TestCase
 {

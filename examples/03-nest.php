@@ -2,8 +2,8 @@
 
 include __DIR__.'/../vendor/autoload.php';
 
-use function Fn\always;
-use function Fn\arr;
+use function Fnc\always;
+use function Fnc\arr;
 
 $data = [
     'id' => 123,

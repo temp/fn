@@ -2,18 +2,18 @@
 
 include __DIR__.'/../vendor/autoload.php';
 
-use function Fn\arr;
-use function Fn\compose;
-use function Fn\converge;
-use function Fn\drop;
-use function Fn\ifElse;
-use function Fn\isEmpty;
-use function Fn\join;
-use function Fn\merge;
-use function Fn\omit;
-use function Fn\pipe;
-use function Fn\prop;
-use function Fn\take;
+use function Fnc\arr;
+use function Fnc\compose;
+use function Fnc\converge;
+use function Fnc\drop;
+use function Fnc\ifElse;
+use function Fnc\isEmpty;
+use function Fnc\join;
+use function Fnc\merge;
+use function Fnc\omit;
+use function Fnc\pipe;
+use function Fnc\prop;
+use function Fnc\take;
 
 $data = [
     'id' => 123,

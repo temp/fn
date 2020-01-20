@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FnTests;
+namespace FncTests;
 
 use PHPUnit\Framework\TestCase;
-use function Fn\map;
+use function Fnc\map;
 
 /**
- * @covers \Fn\Map
+ * @covers \Fnc\Map
  */
 final class MapTest extends TestCase
 {

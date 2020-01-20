@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Fn;
+namespace Fnc;
 
-use Fn\Exception\ElementNotFound;
-use Fn\Helper\Assert;
+use Fnc\Exception\ElementNotFound;
+use Fnc\Helper\Assert;
 use function implode;
 use function in_array;
 use function Safe\substr;

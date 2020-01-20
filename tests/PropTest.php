@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace FnTests;
+namespace FncTests;
 
-use Fn\Exception\ElementNotFound;
+use Fnc\Exception\ElementNotFound;
 use PHPUnit\Framework\TestCase;
-use function Fn\prop;
+use function Fnc\prop;
 
 /**
- * @covers \Fn\Prop
+ * @covers \Fnc\Prop
  */
 final class PropTest extends TestCase
 {

@@ -2,11 +2,11 @@
 
 include __DIR__.'/../vendor/autoload.php';
 
-use function Fn\arr;
-use function Fn\compose;
-use function Fn\ifElse;
-use function Fn\isEmpty;
-use function Fn\prop;
+use function Fnc\arr;
+use function Fnc\compose;
+use function Fnc\ifElse;
+use function Fnc\isEmpty;
+use function Fnc\prop;
 
 $data = [
     'invalid_id' => '',
