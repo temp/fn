@@ -156,7 +156,7 @@ function pipe (callable ...$args): callable {
 function prop($field): callable
 {
     return static function ($value) use ($field) {
-        if (!isset($value[$field])) {
+        if (!array_key_exists($field, $value)) {
             throw ElementNotFound::createFromElement($field);
         }
 
