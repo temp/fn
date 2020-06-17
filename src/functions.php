@@ -17,9 +17,11 @@ use function array_reduce;
 use function array_reverse;
 use function array_shift;
 use function array_slice;
+use function call_user_func_array;
 use function count;
 use function explode;
 use function func_get_args;
+use function func_num_args;
 use function implode;
 use function in_array;
 use function is_a;
@@ -261,14 +263,16 @@ function converge(...$args): callable
 
 function curry1(callable $fn): callable
 {
-    $_curry1 = static function (...$args) use ($fn, &$_curry1) {
+    $_curry1 = static function () use ($fn, &$_curry1) {
+        $args = func_get_args();
+
         switch (count($args)) {
             case 0:
                 return $_curry1;
             case 1:
-                return $fn(...$args);
+                return call_user_func_array($fn, $args);
             default:
-                return $fn(...[$args[0]]);
+                return call_user_func_array($fn, [$args[0]]);
         }
     };
 
@@ -277,18 +281,20 @@ function curry1(callable $fn): callable
 
 function curry2(callable $fn): callable
 {
-    $_curry2 = static function (...$args) use ($fn, &$_curry2) {
-        switch (count($args)) {
+    $_curry2 = static function () use ($fn, &$_curry2) {
+        $args = func_get_args();
+
+        switch (func_num_args()) {
             case 0:
                 return $_curry2;
             case 1:
                 return static function ($b) use ($args, $fn) {
-                    return $fn($args[0], $b);
+                    return call_user_func_array($fn, [$args[0], $b]);
                 };
             case 2:
-                return $fn(...$args);
+                return call_user_func_array($fn, $args);
             default:
-                return $fn(...[$args[0], $args[1]]);
+                return call_user_func_array($fn, [$args[0], $args[1]]);
         }
     };
 
@@ -297,22 +303,24 @@ function curry2(callable $fn): callable
 
 function curry3(callable $fn): callable
 {
-    $_curry3 = static function (...$args) use ($fn, &$_curry3) {
-        switch (count($args)) {
+    $_curry3 = static function () use ($fn, &$_curry3) {
+        $args = func_get_args();
+
+        switch (func_num_args()) {
             case 0:
                 return $_curry3;
             case 1:
                 return curry2(static function ($b, $c) use ($args, $fn) {
-                    return $fn($args[0], $b, $c);
+                    return call_user_func_array($fn, [$args[0], $b, $c]);
                 });
             case 2:
                 return static function ($c) use ($args, $fn) {
-                    return $fn($args[0], $args[1], $c);
+                    return call_user_func_array($fn, [$args[0], $args[1], $c]);
                 };
             case 3:
-                return $fn(...$args);
+                return call_user_func_array($fn, $args);
             default:
-                return $fn(...[$args[0], $args[1], $args[2]]);
+                return call_user_func_array($fn, [$args[0], $args[1], $args[2]]);
         }
     };
 

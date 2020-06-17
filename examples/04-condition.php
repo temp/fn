@@ -2,6 +2,7 @@
 
 include __DIR__.'/../vendor/autoload.php';
 
+use function Fnc\always;
 use function Fnc\applySpec;
 use function Fnc\compose;
 use function Fnc\ifElse;
@@ -18,7 +19,7 @@ $data = [
 $fn = applySpec([
     'invalid' => ifElse(
         compose(isEmpty(), prop('invalid_id')),
-        null,
+        always(null),
         applySpec([
             'id' => prop('invalid_id'),
             'value' => prop('invalid_value'),
@@ -26,7 +27,7 @@ $fn = applySpec([
     ),
     'valid' => ifElse(
         compose(isEmpty(), prop('valid_id')),
-        null,
+        always(null),
         applySpec([
             'id' => prop('valid_id'),
             'value' => prop('valid_value'),
