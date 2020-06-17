@@ -66,6 +66,6 @@ final class IsEmptyTest extends TestCase
     {
         $result = isEmpty(new stdClass());
 
-        $this->assertFalse($result);
+        $this->assertTrue($result);
     }
 }

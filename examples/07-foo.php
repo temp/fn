@@ -5,8 +5,10 @@ include __DIR__ . '/../vendor/autoload.php';
 use function Fnc\all;
 use function Fnc\always;
 use function Fnc\applySpec;
+use function Fnc\complement;
 use function Fnc\compose;
 use function Fnc\converge;
+use function Fnc\filter;
 use function Fnc\ifElse;
 use function Fnc\isEmpty;
 use function Fnc\merge;
@@ -102,12 +104,12 @@ $data = [
     '__TransaktionsAdresse/Stadt' => 'Köln',
     '__TransaktionsAdresse/Strasse' => 'Alpenerstr. 16',
     '__Transaktionsstruktur' => ['self' => 'http://host.docker.internal:2990/jira/rest/api/2/customFieldOption/10373', 'value' => 'Share Deal', 'id' => '10373',],
-    '__Verkaufsstrategie/Verkaufsfördernde Maßnahmen' => NULL,
-    '__Verkaufsstrategie/Verkaufsgrund' => NULL,
-    '__Verkaufswert' => NULL,
-    '__Verkaufswert Stichtag' => NULL,
-    '__Verkaufswert in Fremdwährung' => NULL,
-    '__Verkehrswert' => NULL,
+    '__Verkaufsstrategie/Verkaufsfördernde Maßnahmen' => 'foo',
+    '__Verkaufsstrategie/Verkaufsgrund' => 'bar',
+    '__Verkaufswert' => 2200000.0,
+    '__Verkaufswert Stichtag' => '2020-01-01',
+    '__Verkaufswert in Fremdwährung' => 2300000.0,
+    '__Verkehrswert' => 2400000.0,
     '__Vermietungsstand' => 6900.0,
     '__VertragspartnerAdresse/Adresszusatz 1' => 'dd',
     '__VertragspartnerAdresse/Adresszusatz 2' => 'ee',
@@ -154,6 +156,13 @@ function int(): callable
 {
     return static function ($value) {
         return (int) $value;
+    };
+}
+
+function intOrNull(): callable
+{
+    return static function ($value) {
+        return strlen((string) $value) ? (int) $value : null;
     };
 }
 
@@ -357,11 +366,11 @@ $fn = applySpec([
         'fremdwaehrung' => pipe(prop('__Ist-Miete p.a. in Fremdwährung'), int()),
     ],
     'kapitalwertQm' => ifElse(
-        compose(isEmpty(), prop('__Kapitalwert je Quadratmeter')),
-        always(null),
+        compose(complement(isEmpty()), prop('__Kapitalwert je Quadratmeter')),
         applySpec([
             'euro' => pipe(prop('__Kapitalwert je Quadratmeter'), int()),
         ]),
+        always(null),
     ),
     'kaufpreis' => [
         'euro' => pipe(prop('__Kaufpreis-Feld'), int()),
@@ -380,12 +389,18 @@ $fn = applySpec([
         'quartal' => pipe(prop('__KV-Abschluss/Quartal'), quartal()),
     ],
     'liquiditaet' => ifElse(
-        compose(all(isEmpty()), applySpec([prop('__Liquidität'), prop('__Liquidität')])),
-        always(null),
+        pipe(
+            applySpec([
+                prop('__Liquidität'),
+                prop('__Liquidität in Fremdwährung'),
+            ]),
+            filter(complement(isEmpty()))
+        ),
         applySpec([
             'euro' => pipe(prop('__Liquidität'), int()),
             'fremdwaehrung' => pipe(prop('__Liquidität in Fremdwährung'), int()),
         ]),
+        always(null),
     ),
     'loiKaufpreis' => [
         'euro' => pipe(prop('__LoI-Kaufpreis'), int()),
@@ -467,20 +482,27 @@ $fn = applySpec([
         'verkaufsgrund' => prop('__Verkaufsstrategie/Verkaufsgrund'),
     ],
     'verkaufswert' => ifElse(
-        compose(all(isEmpty()), applySpec([prop('__Verkaufswert'), prop('__Verkaufswert in Fremdwährung'), prop('__Verkaufswert Stichtag')])),
+        pipe(
+            applySpec([
+                prop('__Verkaufswert'),
+                prop('__Verkaufswert in Fremdwährung'),
+                prop('__Verkaufswert Stichtag'),
+            ]),
+            filter(complement(isEmpty()))
+        ),
         always(null),
         applySpec([
-            'euro' => pipe(prop('__Verkaufswert'), int()),
-            'fremdwaehrung' => pipe(prop('__Verkaufswert in Fremdwährung'), int()),
-            'stichtag' => pipe(prop('__Verkaufswert Stichtag'), int()),
+            'euro' => pipe(prop('__Verkaufswert'), intOrNull()),
+            'fremdwaehrung' => pipe(prop('__Verkaufswert in Fremdwährung'), intOrNull()),
+            'stichtag' => pipe(prop('__Verkaufswert Stichtag')),
         ]),
     ),
     'verkehrswert' => ifElse(
-        compose(isEmpty(), prop('__Verkehrswert')),
-        always(null),
+        compose(complement(isEmpty()), prop('__Verkehrswert')),
         applySpec([
             'euro' => pipe(prop('__Verkehrswert'), int()),
         ]),
+        always(null),
     ),
     'vermietungsstand' => pipe(prop('__Vermietungsstand'), dezimal(), prozent()),
     'vertragspartnerAdresse' => [

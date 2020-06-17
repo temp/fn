@@ -9,6 +9,8 @@ use ReflectionFunction;
 use ReflectionMethod;
 use ReflectionObject;
 use RuntimeException;
+use stdClass;
+use function array_filter;
 use function array_key_exists;
 use function array_keys;
 use function array_map;
@@ -26,7 +28,11 @@ use function implode;
 use function in_array;
 use function is_a;
 use function is_array;
+use function is_bool;
 use function is_callable;
+use function is_float;
+use function is_int;
+use function is_numeric;
 use function is_object;
 use function is_string;
 use function max;
@@ -34,6 +40,7 @@ use function property_exists;
 use function Safe\substr;
 use function strpos;
 use function trigger_error;
+use const ARRAY_FILTER_USE_BOTH;
 use const E_USER_DEPRECATED;
 
 // phpcs:disable BrainbitsCodingStandard.Exceptions.GlobalException.GlobalException
@@ -175,6 +182,19 @@ function arr(...$args)
     @trigger_error('arr() is deprecated, use applySpec()', E_USER_DEPRECATED);
 
     return applySpec(...$args);
+}
+
+/**
+ * Performs right-to-left function composition. The rightmost function may have any arity; the remaining functions
+ * must be unary.
+ *
+ * @category Function
+ */
+function complement(callable $fn): callable
+{
+    return static function (...$args) use ($fn): bool {
+        return not($fn(...$args));
+    };
 }
 
 /**
@@ -378,6 +398,144 @@ function drop(...$args)
 }
 
 /**
+ * Returns the empty value of its argument's type.
+ *
+ * @category Function
+ *
+ * @param mixed $args
+ *
+ * @return callable|mixed
+ */
+function emptyVal(...$args)
+{
+    $_emptyVal = static function ($value) {
+        if (is_object($value)) {
+            return new stdClass();
+        }
+        if (is_array($value)) {
+            return [];
+        }
+        if (is_callable($value)) {
+            return static function (): void {
+            };
+        }
+        if (is_string($value)) {
+            return '';
+        }
+        if (is_int($value)) {
+            return 0;
+        }
+        if (is_float($value)) {
+            return 0.0;
+        }
+        if (is_bool($value)) {
+            return false;
+        }
+
+        return null;
+    };
+
+    return curry1($_emptyVal)(...$args);
+}
+
+/**
+ * Returns the empty value of its argument's type.
+ *
+ * @category Function
+ *
+ * @param mixed $args
+ *
+ * @return callable|bool
+ */
+function equals(...$args)
+{
+    $compare = static function ($actual, $expected) use (&$compare): bool {
+        if (is_object($actual)) {
+            $actual = (array) $actual;
+        }
+        if (is_object($expected)) {
+            $expected = (array) $expected;
+        }
+        if (!is_array($expected) || !is_array($actual)) {
+            return $actual === $expected;
+        }
+
+        foreach ($expected as $key => $value) {
+            if (is_numeric($key)) {
+                $match = false;
+                foreach ($actual as $otherKey => $otherValue) {
+                    if (is_numeric($otherKey) && $compare($value, $otherValue)) {
+                        $match = true;
+                        break;
+                    }
+                }
+
+                if (!$match) {
+                    return false;
+                }
+            } elseif (!array_key_exists($key, $actual) || !$compare($actual[$key], $expected[$key])) {
+                return false;
+            }
+        }
+
+        foreach ($actual as $key => $value) {
+            if (is_numeric($key)) {
+                $match = false;
+                foreach ($expected as $otherKey => $otherValue) {
+                    if (is_numeric($otherKey) && $compare($value, $otherValue)) {
+                        $match = true;
+                        break;
+                    }
+                }
+
+                if (!$match) {
+                    return false;
+                }
+            } elseif (!array_key_exists($key, $expected) || !$compare($actual[$key], $expected[$key])) {
+                return false;
+            }
+        }
+
+        return true;
+    };
+
+    $_equals = static function ($a, $b) use ($compare) {
+        return $compare($a, $b);
+    };
+
+    return curry2($_equals)(...$args);
+}
+
+/**
+ * Returns a new function much like the supplied one, except that the first two arguments' order is reversed.
+ *
+ * @category Function
+ *
+ * @param mixed $args
+ *
+ * @return callable|mixed
+ */
+function filter(...$args)
+{
+    /**
+     * Returns a new list containing only those items that match a given predicate function. The predicate function is
+     * passed one argument: (value).
+     *
+     * @category List
+     *
+     * @param callable $callable (value, key)
+     * @param mixed[]  $list
+     *
+     * @return mixed[]
+     */
+    $_filter = static function (callable $callable, array $list) {
+        return array_filter($list, $callable, ARRAY_FILTER_USE_BOTH);
+    };
+
+    return curry2($_filter)(...$args);
+}
+
+/**
  * Returns a new function much like the supplied one, except that the first two arguments' order is reversed.
  *
  * @category Function
@@ -396,7 +554,6 @@ function flip(callable $callable, ?int $arity = null) // phpcs:ignore
         return apply($callable, concat([$args[1], $args[0]], tail(tail($args))));
     });
 }
-
 
 /**
  * How many arguments the provided callable expects (arity)
@@ -433,6 +590,25 @@ function _getArity($callable): int
 }
 
 /**
+ * Returns the first element of a list, NULL is empty list
+ * If the list is an associative array, it will return an array with 1 key=>value
+ *
+ * @category List
+ *
+ * @param mixed[] $list
+ *
+ * @return mixed
+ */
+function head(array $list)
+{
+    if (!count($list)) {
+        return null;
+    }
+
+    return array_shift($list);
+}
+
+/**
  * @param mixed $args
  *
  * @return callable|mixed
@@ -460,12 +636,12 @@ function ifElse(...$args): callable
 /**
  * @param mixed $args
  *
- * @return callable|mixed
+ * @return callable|bool
  */
 function isEmpty(...$args)
 {
     $_isEmpty = static function ($value): bool {
-        return empty($value); // phpcs:ignore SlevomatCodingStandard.ControlStructures.DisallowEmpty.DisallowedEmpty
+        return equals($value, emptyVal($value));
     };
 
     return curry1($_isEmpty)(...$args);
@@ -543,6 +719,28 @@ function merge(...$args)
     };
 
     return curry2($_merge)(...$args);
+}
+
+/**
+ * @param mixed $args
+ *
+ * @return callable|bool
+ */
+function not(...$args)
+{
+    /**
+     * A function that returns the `!` of its argument. It will return `true` when
+     * passed false-y value, and `false` when passed a truth-y one.
+     *
+     * @category Logic
+     *
+     * @return bool
+     */
+    $_not = static function ($value) {
+        return !$value;
+    };
+
+    return curry1($_not)(...$args);
 }
 
 /**
