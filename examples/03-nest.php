@@ -3,23 +3,23 @@
 include __DIR__.'/../vendor/autoload.php';
 
 use function Fnc\always;
-use function Fnc\arr;
+use function Fnc\applySpec;
 
 $data = [
     'id' => 123,
 ];
 
-$fn = arr([
-    'nested' => arr([
-        'first' => arr([
+$fn = applySpec([
+    'nested' => [
+        'first' => [
             'a' => always('foo'),
             'b' => always(456),
-        ]),
-        'second' => arr([
+        ],
+        'second' => [
             'a' => always('bar'),
             'b' => always(567),
-        ]),
-    ]),
+        ],
+    ],
 ]);
 
 echo 'Input:'.PHP_EOL;

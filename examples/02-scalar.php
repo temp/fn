@@ -3,13 +3,13 @@
 include __DIR__.'/../vendor/autoload.php';
 
 use function Fnc\always;
-use function Fnc\arr;
+use function Fnc\applySpec;
 
 $data = [
     'id' => 123,
 ];
 
-$fn = arr([
+$fn = applySpec([
     'null' => always(null),
     'string' => always('foo'),
     'int' => always(789),

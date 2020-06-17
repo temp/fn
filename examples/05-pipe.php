@@ -2,7 +2,7 @@
 
 include __DIR__.'/../vendor/autoload.php';
 
-use function Fnc\arr;
+use function Fnc\applySpec;
 use function Fnc\compose;
 use function Fnc\pipe;
 use function Fnc\prop;
@@ -13,7 +13,7 @@ $data = [
     'foo' => 'bar',
 ];
 
-$fn = arr([
+$fn = applySpec([
     'abc' => pipe(prop('abc'), take(1)),
     'foo' => compose(take(1), prop('foo')),
 ]);

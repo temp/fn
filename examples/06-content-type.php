@@ -3,7 +3,7 @@
 include __DIR__.'/../vendor/autoload.php';
 
 use function Fnc\always;
-use function Fnc\contains;
+use function Fnc\flip;
 use function Fnc\ifElse;
 use function Fnc\pipe;
 use function Fnc\prop;
@@ -18,7 +18,7 @@ $fn = pipe(
         return !$value ? '' : end(explode('.', $value));
     },
     ifElse(
-        contains(['gif', 'png', 'jpg', 'jpeg']),
+        flip('Fnc\contains')(['gif', 'png', 'jpg', 'jpeg']),
         static function ($value) {
             return sprintf('image/%s', $value);
         },

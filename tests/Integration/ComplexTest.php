@@ -6,7 +6,7 @@ namespace FncTests\Integration;
 
 use PHPUnit\Framework\TestCase;
 use function Fnc\always;
-use function Fnc\arr;
+use function Fnc\applySpec;
 use function Fnc\compose;
 use function Fnc\converge;
 use function Fnc\drop;
@@ -18,6 +18,9 @@ use function Fnc\omit;
 use function Fnc\pipe;
 use function Fnc\prop;
 use function Fnc\take;
+use function Fnc\unapply;
+
+// phpcs:disable Generic.PHP.ForbiddenFunctions.FoundWithAlternative
 
 final class ComplexTest extends TestCase
 {
@@ -39,21 +42,21 @@ final class ComplexTest extends TestCase
         $remap = converge(
             merge(),
             [
-                arr([
-                    'contact' => arr([
+                applySpec([
+                    'contact' => [
                         'id' => prop('contact_id'),
                         'name' => prop('contact_name'),
-                    ]),
+                    ],
                     'unloading_point' => ifElse(
                         compose(isEmpty(), prop('unloading_point_code')),
-                        null,
-                        arr([
+                        always(null),
+                        applySpec([
                             'code' => prop('unloading_point_code'),
                             'description' => prop('unloading_point_description'),
                         ]),
                     ),
                     'creation_date' => converge(
-                        join(' '),
+                        unapply(join(' ')),
                         [
                             pipe(prop('creation_date_date'), take(10)),
                             pipe(prop('creation_date_time'), drop(11)),
@@ -61,41 +64,46 @@ final class ComplexTest extends TestCase
                     ),
                     'invalid' => ifElse(
                         compose(isEmpty(), prop('invalid_id')),
-                        null,
-                        arr([
+                        always(null),
+                        applySpec([
                             'id' => prop('invalid_id'),
                             'value' => prop('invalid_value'),
                         ]),
-                        ),
+                    ),
                     'valid' => ifElse(
                         compose(isEmpty(), prop('valid_id')),
-                        null,
-                        arr([
+                        always(null),
+                        applySpec([
                             'id' => prop('valid_id'),
                             'value' => prop('valid_value'),
                         ]),
-                        ),
-                    'nested' => arr([
-                        'first' => arr([
+                    ),
+                    'nested' => [
+                        'first' => [
                             'a' => always('foo'),
                             'b' => always(456),
-                        ]),
-                        'second' => arr([
+                        ],
+                        'second' => [
                             'a' => always('bar'),
                             'b' => always(567),
-                        ]),
-                    ]),
+                        ],
+                    ],
                     'null' => always(null),
                     'string' => always('foo'),
                     'int' => always(789),
                     'float' => always(890.12),
                 ]),
                 omit([
-                    'contact_id', 'contact_name',
-                    'unloading_point_code', 'unloading_point_description',
-                    'invalid_id', 'invalid_value',
-                    'valid_id', 'valid_value',
-                    'creation_date_date', 'creation_date_time',
+                    'contact_id',
+                    'contact_name',
+                    'unloading_point_code',
+                    'unloading_point_description',
+                    'invalid_id',
+                    'invalid_value',
+                    'valid_id',
+                    'valid_value',
+                    'creation_date_date',
+                    'creation_date_time',
                 ]),
             ]
         );

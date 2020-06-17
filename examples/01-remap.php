@@ -2,7 +2,7 @@
 
 include __DIR__.'/../vendor/autoload.php';
 
-use function Fnc\arr;
+use function Fnc\applySpec;
 use function Fnc\compose;
 use function Fnc\converge;
 use function Fnc\drop;
@@ -14,6 +14,7 @@ use function Fnc\omit;
 use function Fnc\pipe;
 use function Fnc\prop;
 use function Fnc\take;
+use function Fnc\unapply;
 
 $data = [
     'id' => 123,
@@ -28,21 +29,21 @@ $data = [
 $fn = converge(
     merge(),
     [
-        arr([
-            'contact' => arr([
+        applySpec([
+            'contact' => [
                 'id' => prop('contact_id'),
                 'name' => prop('contact_name'),
-            ]),
+            ],
             'unloadingPoint' => ifElse(
                 compose(isEmpty(), prop('unloading_point_code')),
                 null,
-                arr([
+                applySpec([
                     'id' => prop('unloading_point_code'),
                     'value' => prop('unloading_point_description'),
                 ]),
             ),
             'creationDate' => converge(
-                join(' '),
+                unapply(join(' ')),
                 [
                     pipe(prop('creation_date_date'), take(10)),
                     pipe(prop('creation_date_time'), drop(11), take(8)),

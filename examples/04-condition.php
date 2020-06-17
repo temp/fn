@@ -2,7 +2,7 @@
 
 include __DIR__.'/../vendor/autoload.php';
 
-use function Fnc\arr;
+use function Fnc\applySpec;
 use function Fnc\compose;
 use function Fnc\ifElse;
 use function Fnc\isEmpty;
@@ -15,11 +15,11 @@ $data = [
     'valid_value' => 'bar',
 ];
 
-$fn = arr([
+$fn = applySpec([
     'invalid' => ifElse(
         compose(isEmpty(), prop('invalid_id')),
         null,
-        arr([
+        applySpec([
             'id' => prop('invalid_id'),
             'value' => prop('invalid_value'),
         ]),
@@ -27,7 +27,7 @@ $fn = arr([
     'valid' => ifElse(
         compose(isEmpty(), prop('valid_id')),
         null,
-        arr([
+        applySpec([
             'id' => prop('valid_id'),
             'value' => prop('valid_value'),
         ]),
