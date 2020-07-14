@@ -369,6 +369,33 @@ function curryN(int $arity, callable $callable): callable
 }
 
 /**
+ * @return mixed|callable
+ */
+function divide(...$args)
+{
+    /**
+     * Divides two numbers. Equivalent to `$a / $b`.
+     *
+     * @param int|float $a The first value.
+     * @param int|float $b The second value.
+     *
+     * @return float The result of `$a / $b`.
+     */
+    $_divide = function ($a, $b) {
+        if (!$a) {
+            return 0;
+        }
+        if (!$b) {
+            return null;
+        }
+
+        return $a / $b;
+    };
+
+    return curry2($_divide)(...$args);
+}
+
+/**
  * @param mixed $args
  *
  * @return callable|mixed
@@ -613,6 +640,20 @@ function head(array $list)
  *
  * @return callable|mixed
  */
+function identity(...$args)
+{
+    $_identity = static function ($identity) {
+        return $identity;
+    };
+
+    return curry1($_identity)(...$args);
+}
+
+/**
+ * @param mixed $args
+ *
+ * @return callable|mixed
+ */
 function ifElse(...$args): callable
 {
     $_ifElse = static function (callable $condition, ?callable $onTrue, ?callable $onFalse) {
@@ -719,6 +760,33 @@ function merge(...$args)
     };
 
     return curry2($_merge)(...$args);
+}
+
+/**
+ * @return mixed|callable
+ */
+function multiply(...$args)
+{
+    /**
+     * Multiplies two numbers. Equivalent to `a * b` but curried.
+     *
+     * @param int|float $a The first value.
+     * @param int|float $b The second value.
+     *
+     * @return float The result of `$a / $b`.
+     */
+    $_multiply = function ($a, $b) {
+        if (!$a) {
+            return 0;
+        }
+        if (!$b) {
+            return 0;
+        }
+
+        return $a * $b;
+    };
+
+    return curry2($_multiply)(...$args);
 }
 
 /**
