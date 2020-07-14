@@ -31,21 +31,21 @@ final class DivideTest extends TestCase
     {
         $result = divide(null, 3);
 
-        $this->assertSame(0, $result);
+        $this->assertNull($result);
     }
 
     public function testZeroB(): void
     {
         $result = divide(12, 0);
 
-        $this->assertSame(null, $result);
+        $this->assertNull($result);
     }
 
     public function testNullB(): void
     {
         $result = divide(12, null);
 
-        $this->assertSame(null, $result);
+        $this->assertNull($result);
     }
 
     public function testCurriedDivide(): void

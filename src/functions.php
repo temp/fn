@@ -382,8 +382,8 @@ function divide(...$args)
      * @return float The result of `$a / $b`.
      */
     $_divide = function ($a, $b) {
-        if (!$a) {
-            return 0;
+        if ($a === null) {
+            return null;
         }
         if (!$b) {
             return null;
