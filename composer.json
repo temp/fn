@@ -1,5 +1,6 @@
 {
     "name": "temp/fn",
+    "license": "MIT",
     "authors": [
         {
             "name": "Stephan Wentz",
