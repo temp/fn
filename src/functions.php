@@ -935,6 +935,25 @@ function reverse(...$args)
 }
 
 /**
+ * @return mixed|callable
+ */
+function sum(...$args)
+{
+    /**
+     * Adds together all the elements of a list. Returns 0 for an empty list.
+     *
+     * @param int[]|float[] $elements  A list of numbers.
+     *
+     * @return int|float The sum of all the numbers in the list.
+     */
+    $_sum = function (array $elements) {
+        return array_sum($elements);
+    };
+
+    return curry1($_sum)(...$args);
+}
+
+/**
  * Returns all but the first element of a list.
  * Preserves keys on associative (non-numerical key) arrays
  *
