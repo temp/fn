@@ -6,7 +6,6 @@ namespace FncTests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use function Fnc\identity;
-use function strtoupper;
 
 /**
  * @covers \Fnc\identity

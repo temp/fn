@@ -19,6 +19,7 @@ use function array_reduce;
 use function array_reverse;
 use function array_shift;
 use function array_slice;
+use function array_sum;
 use function call_user_func_array;
 use function count;
 use function explode;
@@ -369,6 +370,8 @@ function curryN(int $arity, callable $callable): callable
 }
 
 /**
+ * @param mixed $args
+ *
  * @return mixed|callable
  */
 function divide(...$args)
@@ -381,10 +384,11 @@ function divide(...$args)
      *
      * @return float The result of `$a / $b`.
      */
-    $_divide = function ($a, $b) {
+    $_divide = static function ($a, $b) {
         if ($a === null) {
             return null;
         }
+
         if (!$b) {
             return null;
         }
@@ -763,6 +767,8 @@ function merge(...$args)
 }
 
 /**
+ * @param mixed $args
+ *
  * @return mixed|callable
  */
 function multiply(...$args)
@@ -775,7 +781,7 @@ function multiply(...$args)
      *
      * @return float The result of `$a / $b`.
      */
-    $_multiply = function ($a, $b) {
+    $_multiply = static function ($a, $b) {
         if (!$a) {
             return 0;
         }
@@ -935,6 +941,8 @@ function reverse(...$args)
 }
 
 /**
+ * @param mixed $args
+ *
  * @return mixed|callable
  */
 function sum(...$args)
@@ -946,7 +954,7 @@ function sum(...$args)
      *
      * @return int|float The sum of all the numbers in the list.
      */
-    $_sum = function (array $elements) {
+    $_sum = static function (array $elements) {
         return array_sum($elements);
     };
 

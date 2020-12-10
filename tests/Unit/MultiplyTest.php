@@ -6,7 +6,6 @@ namespace FncTests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use function Fnc\multiply;
-use function strtoupper;
 
 /**
  * @covers \Fnc\multiply

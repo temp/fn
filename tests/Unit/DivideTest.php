@@ -6,7 +6,6 @@ namespace FncTests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use function Fnc\divide;
-use function strtoupper;
 
 /**
  * @covers \Fnc\divide
