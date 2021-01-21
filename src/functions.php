@@ -348,6 +348,36 @@ function curry3(callable $fn): callable
     return $_curry3;
 }
 
+function curry4(callable $fn): callable
+{
+    $_curry4 = static function () use ($fn, &$_curry4) {
+        $args = func_get_args();
+
+        switch (func_num_args()) {
+            case 0:
+                return $_curry4;
+            case 1:
+                return curry3(static function ($b, $c, $d) use ($args, $fn) {
+                    return call_user_func_array($fn, [$args[0], $b, $c, $d]);
+                });
+            case 2:
+                return curry2(static function ($c, $d) use ($args, $fn) {
+                    return call_user_func_array($fn, [$args[0], $args[1], $c, $d]);
+                });
+            case 3:
+                return static function ($d) use ($args, $fn) {
+                    return call_user_func_array($fn, [$args[0], $args[1], $args[2], $d]);
+                };
+            case 4:
+                return call_user_func_array($fn, $args);
+            default:
+                return call_user_func_array($fn, [$args[0], $args[1], $args[2], $args[3]]);
+        }
+    };
+
+    return $_curry4;
+}
+
 /**
  * Wrapper for curry* functions.
  *

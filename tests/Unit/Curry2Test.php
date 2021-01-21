@@ -18,7 +18,9 @@ final class Curry2Test extends TestCase
             return $a + $b;
         });
         $addToFive = $sum2(5);
+        $addToThree = $addToFive(3);
 
+        $this->assertEquals(8, $addToThree);
         $this->assertEquals(8, $addToFive(3));
         $this->assertEquals(8, $sum2(3, 5));
     }

@@ -22,6 +22,8 @@ final class Curry3Test extends TestCase
         $minus4 = $plus10(-4);
 
         $this->assertEquals(11, $minus4);
+        $this->assertEquals(11, $plus10(-4));
         $this->assertEquals(11, $plus5(10, -4));
+        $this->assertEquals(11, $sum3(5, 10, -4));
     }
 }
