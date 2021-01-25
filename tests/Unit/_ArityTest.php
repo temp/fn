@@ -10,7 +10,7 @@ use function Fnc\_arity;
 // phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
 
 /**
- * @covers \Fnc\pipe
+ * @covers \Fnc\_arity
  */
 final class _ArityTest extends TestCase
 {

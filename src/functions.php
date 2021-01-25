@@ -62,8 +62,8 @@ function all(...$args)
      *
      * @category List
      *
-     * @param callable $callable The predicate function.
-     * @param mixed[]  $list     The array to consider.
+     * @param callable $fn   The predicate function.
+     * @param mixed[]  $list The array to consider.
      *
      * @return bool `true` if the predicate is satisfied by every element, `false` otherwise.
      */
@@ -96,6 +96,37 @@ function always($arg): callable
     return static function () use ($arg) {
         return $arg;
     };
+}
+
+/**
+ * @param mixed $args
+ *
+ * @return bool|callable
+ */
+function any(...$args)
+{
+    /**
+     * Returns `true` if at least one of the elements of the list match the predicate, `false` otherwise.
+     * Function "breaks early"
+     *
+     * @category List
+     *
+     * @param callable $fn   The predicate function.
+     * @param mixed[]  $list The array to consider.
+     *
+     * @return bool `true` if the predicate is satisfied by at least one element, `false` otherwise.
+     */
+    $_any = static function (callable $fn, array $list) {
+        foreach ($list as $item) {
+            if (apply($fn, [$item])) {
+                return true;
+            }
+        }
+
+        return false;
+    };
+
+    return curry2($_any)(...$args);
 }
 
 /**
@@ -792,6 +823,31 @@ function multiply(...$args)
  *
  * @return callable|bool
  */
+function none(...$args)
+{
+    /**
+     * Returns `true` if no elements of the list match the predicate, `false` otherwise.
+     * Function "breaks early"
+     *
+     * @category List
+     *
+     * @param callable $fn   The predicate function.
+     * @param mixed[]  $list The array to consider.
+     *
+     * @return bool `true` if the predicate is not satisfied by every element, `false` otherwise.
+     */
+    $_none = static function (callable $fn, array $list) {
+        return all(_complement($fn), $list);
+    };
+
+    return curry2($_none)(...$args);
+}
+
+/**
+ * @param mixed $args
+ *
+ * @return callable|bool
+ */
 function not(...$args)
 {
     /**
@@ -1101,4 +1157,9 @@ function _arity(int $n, callable $fn): callable
 function _pipe(callable $f, callable $g): callable
 {
     return static fn(...$args) => $g($f(...$args));
+}
+
+function _complement(callable $f): callable
+{
+    return static fn(...$args) => !$f(...$args);
 }

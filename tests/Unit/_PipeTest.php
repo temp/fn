@@ -11,7 +11,7 @@ use function round;
 // phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
 
 /**
- * @covers \Fnc\pipe
+ * @covers \Fnc\_pipe
  */
 final class _PipeTest extends TestCase
 {

@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace FncTests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use function Fnc\all;
+use function Fnc\any;
 use function Fnc\isEmpty;
 
 /**
- * @covers \Fnc\all
+ * @covers \Fnc\any
  */
-final class AllTest extends TestCase
+final class AnyTest extends TestCase
 {
     public function testAllNotEmpty(): void
     {
         $data = [1, 2];
 
-        $result = all(isEmpty(), $data);
+        $result = any(isEmpty(), $data);
 
         $this->assertFalse($result);
     }
@@ -26,7 +26,7 @@ final class AllTest extends TestCase
     {
         $data = [null, null];
 
-        $result = all(isEmpty(), $data);
+        $result = any(isEmpty(), $data);
 
         $this->assertTrue($result);
     }
@@ -35,18 +35,18 @@ final class AllTest extends TestCase
     {
         $data = [null, 2];
 
-        $result = all(isEmpty(), $data);
+        $result = any(isEmpty(), $data);
 
-        $this->assertFalse($result);
+        $this->assertTrue($result);
     }
 
     public function testCurriedAllNotEmpty(): void
     {
         $data = [1, 2];
 
-        $all = all(isEmpty());
+        $any = any(isEmpty());
+        $result = $any($data);
 
-        $result = $all($data);
         $this->assertFalse($result);
     }
 
@@ -54,9 +54,9 @@ final class AllTest extends TestCase
     {
         $data = [null, null];
 
-        $all = all(isEmpty());
+        $any = any(isEmpty());
+        $result = $any($data);
 
-        $result = $all($data);
         $this->assertTrue($result);
     }
 
@@ -64,8 +64,9 @@ final class AllTest extends TestCase
     {
         $data = [null, 2];
 
-        $result = all(isEmpty(), $data);
+        $any = any(isEmpty());
+        $result = $any($data);
 
-        $this->assertFalse($result);
+        $this->assertTrue($result);
     }
 }
