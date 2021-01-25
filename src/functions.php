@@ -888,6 +888,50 @@ function omit(...$args)
  *
  * @return callable|mixed
  */
+function path(...$args)
+{
+    $_path = static function (array $pathArray, $obj) {
+        return paths([$pathArray], $obj)[0];
+    };
+
+    return curry2($_path)(...$args);
+}
+
+/**
+ * @param mixed $args
+ *
+ * @return callable|mixed
+ */
+function paths(...$args)
+{
+    $_paths = static function (array $pathsArray, $obj) {
+        return array_map(
+            static function ($paths) use ($obj) {
+                $val = $obj;
+                foreach ($paths as $path) {
+                    if ($val === null) {
+                        return null;
+                    }
+                    if (!array_key_exists($path, $val)) {
+                        return null;
+                    }
+                    $val = $val[$path];
+                }
+
+                return $val;
+            },
+            $pathsArray
+        );
+    };
+
+    return curry2($_paths)(...$args);
+}
+
+/**
+ * @param mixed $args
+ *
+ * @return callable|mixed
+ */
 function pipe(...$args)
 {
     return _arity(
