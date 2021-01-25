@@ -206,11 +206,7 @@ function complement(callable $fn): callable
  */
 function compose(callable ...$args): callable
 {
-    return reduce(static function ($acc, $arg) {
-        return $acc === null ? $arg : static function (...$argz) use ($acc, $arg) {
-            return apply($acc, [apply($arg, $argz)]);
-        };
-    }, null, $args);
+    return pipe(...reverse($args));
 }
 
 /**
@@ -617,40 +613,6 @@ function flip(callable $callable, ?int $arity = null) // phpcs:ignore
 }
 
 /**
- * How many arguments the provided callable expects (arity)
- *
- * @param callable|mixed $callable
- *
- * @throws RuntimeException
- */
-function _getArity($callable): int
-{
-    $r = false;
-    if (is_array($callable)) {
-        $r = new ReflectionMethod($callable[0], $callable[1]);
-    } elseif (is_string($callable)) {
-        if (strpos($callable, '::') !== false) {
-            $tmp = explode('::', $callable);
-            $r = new ReflectionMethod($tmp[0], $tmp[1]);
-        } elseif (is_callable($callable)) {
-            $r = new ReflectionFunction($callable);
-        }
-    } elseif (is_a($callable, Closure::class)) {
-        $objR = new ReflectionObject($callable);
-        $r = $objR->getMethod('__invoke');
-    } elseif (is_object($callable) && is_callable($callable)) {
-        $objR = new ReflectionObject($callable);
-        $r = $objR->getMethod('__invoke');
-    }
-
-    if (!$r) {
-        throw new RuntimeException('Could not examine callback');
-    }
-
-    return count($r->getParameters());
-}
-
-/**
  * Returns the first element of a list, NULL is empty list
  * If the list is an associative array, it will return an array with 1 key=>value
  *
@@ -872,7 +834,10 @@ function omit(...$args)
  */
 function pipe(...$args)
 {
-    return apply('\Fnc\compose', reverse($args));
+    return _arity(
+        _getArity($args[0]),
+        reduce('\Fnc\_pipe', $args[0], tail($args))
+    );
 }
 
 /**
@@ -1056,4 +1021,84 @@ function unapply(callable $fn): callable
     return static function (...$args) use ($fn) {
         return $fn($args);
     };
+}
+
+/**
+ * How many arguments the provided callable expects (arity)
+ *
+ * @param callable|mixed $callable
+ *
+ * @throws RuntimeException
+ */
+function _getArity($callable): int
+{
+    $r = false;
+    if (is_array($callable)) {
+        $r = new ReflectionMethod($callable[0], $callable[1]);
+    } elseif (is_string($callable)) {
+        if (strpos($callable, '::') !== false) {
+            $tmp = explode('::', $callable);
+            $r = new ReflectionMethod($tmp[0], $tmp[1]);
+        } elseif (is_callable($callable)) {
+            $r = new ReflectionFunction($callable);
+        }
+    } elseif (is_a($callable, Closure::class)) {
+        $objR = new ReflectionObject($callable);
+        $r = $objR->getMethod('__invoke');
+    } elseif (is_object($callable) && is_callable($callable)) {
+        $objR = new ReflectionObject($callable);
+        $r = $objR->getMethod('__invoke');
+    }
+
+    if (!$r) {
+        throw new RuntimeException('Could not examine callback');
+    }
+
+    return count($r->getParameters());
+}
+
+/**
+ * Create function with given arity
+ *
+ * @throws RuntimeException
+ */
+function _arity(int $n, callable $fn): callable
+{
+    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+
+    switch ($n) {
+        case 0:
+            return static fn() => $fn(...func_get_args());
+        case 1:
+            return static fn($a0) => $fn(...func_get_args());
+        case 2:
+            return static fn($a0, $a1) => $fn(...func_get_args());
+        case 3:
+            return static fn($a0, $a1, $a2) => $fn(...func_get_args());
+        case 4:
+            return static fn($a0, $a1, $a2, $a3) => $fn(...func_get_args());
+        case 5:
+            return static fn($a0, $a1, $a2, $a3, $a4) => $fn(...func_get_args());
+        case 6:
+            return static fn($a0, $a1, $a2, $a3, $a4, $a5) => $fn(...func_get_args());
+        case 7:
+            return static fn($a0, $a1, $a2, $a3, $a4, $a5, $a6) => $fn(...func_get_args());
+        case 8:
+            return static fn($a0, $a1, $a2, $a3, $a4, $a5, $a6, $a7) => $fn(...func_get_args());
+        case 9:
+            return static fn($a0, $a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8) => $fn(...func_get_args());
+        case 10:
+            return static fn($a0, $a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9) => $fn(...func_get_args());
+        default:
+            throw new RuntimeException(
+                'First argument to _arity must be a non-negative integer no greater than ten'
+            );
+    }
+
+    // phpcs:enable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+}
+
+function _pipe(callable $f, callable $g): callable
+{
+    return static fn(...$args) => $g($f(...$args));
 }

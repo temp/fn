@@ -12,12 +12,13 @@ use function Fnc\_getArity;
 // phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
 // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
 // phpcs:disable Squiz.Classes.ClassFileName.NoMatch
+// phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
 // phpcs:disable Squiz.Functions.GlobalFunction.Found
 
 /**
  * @covers \Fnc\_getArity
  */
-final class GetArityTest extends TestCase
+final class _GetArityTest extends TestCase
 {
     public static function foo(string $x, int $y): void
     {
@@ -25,14 +26,14 @@ final class GetArityTest extends TestCase
 
     public function testStaticMethodString(): void
     {
-        $result = _getArity('\FncTests\Unit\GetArityTest::foo');
+        $result = _getArity('\FncTests\Unit\_GetArityTest::foo');
 
         $this->assertEquals(2, $result);
     }
 
     public function testStaticMethodArray(): void
     {
-        $result = _getArity(['\FncTests\Unit\GetArityTest', 'foo']);
+        $result = _getArity(['\FncTests\Unit\_GetArityTest', 'foo']);
 
         $this->assertEquals(2, $result);
     }

@@ -1,3 +1,4 @@
+/composer.lock
 .xdebug-filter.php
 /build
 /phpcs.xml
