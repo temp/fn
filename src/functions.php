@@ -40,9 +40,7 @@ use function max;
 use function property_exists;
 use function Safe\substr;
 use function strpos;
-use function trigger_error;
 use const ARRAY_FILTER_USE_BOTH;
-use const E_USER_DEPRECATED;
 
 // phpcs:disable BrainbitsCodingStandard.Exceptions.GlobalException.GlobalException
 // phpcs:disable SlevomatCodingStandard.Commenting.ForbiddenAnnotations.AnnotationForbidden
@@ -200,20 +198,6 @@ function applySpec($spec)
     };
 
     return curry1($_applySpec)($spec);
-}
-
-/**
- * @deprecated Use applySpec()
- *
- * @param mixed $args
- *
- * @return callable|mixed
- */
-function arr(...$args)
-{
-    @trigger_error('arr() is deprecated, use applySpec()', E_USER_DEPRECATED);
-
-    return applySpec(...$args);
 }
 
 /**
