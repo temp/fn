@@ -895,7 +895,7 @@ function paths(...$args)
             static function ($paths) use ($obj) {
                 $val = $obj;
                 foreach ($paths as $path) {
-                    if (!array_key_exists($path, $val)) {
+                    if (!is_array($val) || !array_key_exists($path, $val)) {
                         return null;
                     }
                     $val = $val[$path];
