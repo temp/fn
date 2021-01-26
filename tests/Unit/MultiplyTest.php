@@ -12,7 +12,7 @@ use function Fnc\multiply;
  */
 final class MultiplyTest extends TestCase
 {
-    public function testDivide(): void
+    public function testMultiply(): void
     {
         $result = multiply(12, 3);
 
@@ -47,7 +47,7 @@ final class MultiplyTest extends TestCase
         $this->assertSame(0, $result);
     }
 
-    public function testCurriedDivide(): void
+    public function testCurriedMultiply(): void
     {
         $identity = multiply(12);
 

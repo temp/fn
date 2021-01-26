@@ -421,6 +421,8 @@ function curryN(int $arity, callable $callable): callable
             return curry2($callable);
         case 3:
             return curry3($callable);
+        case 4:
+            return curry4($callable);
         default:
             throw new RuntimeException('unsupported arity '.$arity);
     }
@@ -802,7 +804,7 @@ function multiply(...$args)
      * @param int|float $a The first value.
      * @param int|float $b The second value.
      *
-     * @return float The result of `$a / $b`.
+     * @return int|float The result of `$a * $b`.
      */
     $_multiply = static function ($a, $b) {
         if (!$a) {
@@ -816,6 +818,48 @@ function multiply(...$args)
     };
 
     return curry2($_multiply)(...$args);
+}
+
+/**
+ * @param mixed $args
+ *
+ * @return mixed|callable
+ */
+function multiplyAll(...$args)
+{
+    /**
+     * Multiplies set of numbers. Equivalent to `a * b * ...` but curried.
+     *
+     * @param array<int|float> $factors Values to multiply.
+     *
+     * @return int|float The result of `$a * $b * ...`.
+     */
+    $_multiplyAll = static function ($factors) {
+        if (!$factors) {
+            return 0;
+        }
+
+        if (!is_array($factors)) {
+            return 0;
+        }
+
+        $product = 1;
+        foreach ($factors as $factor) {
+            if (!$factor) {
+                return 0;
+            }
+
+            if (!is_numeric($factor)) {
+                return 0;
+            }
+
+            $product *= $factor;
+        }
+
+        return $product;
+    };
+
+    return curry1($_multiplyAll)(...$args);
 }
 
 /**
