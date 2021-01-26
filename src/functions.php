@@ -804,7 +804,7 @@ function multiply(...$args)
      * @param int|float $a The first value.
      * @param int|float $b The second value.
      *
-     * @return float The result of `$a / $b`.
+     * @return int|float The result of `$a * $b`.
      */
     $_multiply = static function ($a, $b) {
         if (!$a) {
