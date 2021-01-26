@@ -22,7 +22,7 @@ use function Fnc\unapply;
 
 // phpcs:disable Generic.PHP.ForbiddenFunctions.FoundWithAlternative
 
-final class ComplexTest extends TestCase
+final class RemapTest extends TestCase
 {
     public function testComplex(): void
     {

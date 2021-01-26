@@ -58,6 +58,8 @@ final class EqualsTest extends TestCase
         $this->assertTrue(equals([1, 'a', 'b' => [2, 3, 'c']], [1, 'a', 'b' => [2, 3, 'c']]));
         $this->assertFalse(equals([1, 2, 3], []));
         $this->assertFalse(equals([1], 1));
+        $this->assertFalse(equals([1], [2]));
+        $this->assertFalse(equals(['b' => 3, 'c' => 5], ['b' => 3]));
     }
 
     public function testObject(): void

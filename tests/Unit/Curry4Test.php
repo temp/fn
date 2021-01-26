@@ -22,10 +22,14 @@ final class Curry4Test extends TestCase
         $minus4 = $plus10(-4);
         $plus4 = $minus4(4);
 
+        $this->assertEquals($sum4, $sum4());
         $this->assertEquals(15, $plus4);
         $this->assertEquals(15, $minus4(4));
         $this->assertEquals(15, $plus10(-4, 4));
         $this->assertEquals(15, $plus5(10, -4, 4));
+        $this->assertEquals(15, $sum4(5, 10)(-4, 4));
+        $this->assertEquals(15, $sum4(5, 10, -4)(4));
         $this->assertEquals(15, $sum4(5, 10, -4, 4));
+        $this->assertEquals(15, $sum4(5, 10, -4, 4, 8));
     }
 }

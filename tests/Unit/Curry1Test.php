@@ -19,7 +19,9 @@ final class Curry1Test extends TestCase
         });
         $five = $sum(5);
 
+        $this->assertEquals($sum, $sum());
         $this->assertEquals(5, $five);
         $this->assertEquals(5, $sum(5));
+        $this->assertEquals(5, $sum(5, 6, 7));
     }
 }
