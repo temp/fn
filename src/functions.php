@@ -744,7 +744,11 @@ function map(...$args)
      *
      * @return mixed[]
      */
-    $_map = static function (callable $fn, array $list) {
+    $_map = static function (callable $fn, ?array $list) {
+        if (!is_array($list)) {
+            return [];
+        }
+
         return array_map($fn, $list);
     };
 

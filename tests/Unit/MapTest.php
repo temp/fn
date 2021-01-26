@@ -13,6 +13,60 @@ use function strtoupper;
  */
 final class MapTest extends TestCase
 {
+    public function testNull(): void
+    {
+        $data = null;
+
+        $result = map(
+            static function ($i) {
+                return $i * 2;
+            },
+            $data
+        );
+
+        $this->assertSame([], $result);
+    }
+
+    public function testCurriedNull(): void
+    {
+        $data = null;
+
+        $map = map(static function ($i) {
+            return $i * 2;
+        });
+
+        $result = $map($data);
+
+        $this->assertSame([], $result);
+    }
+
+    public function testEmptyArray(): void
+    {
+        $data = [];
+
+        $result = map(
+            static function ($i) {
+                return $i * 2;
+            },
+            $data
+        );
+
+        $this->assertSame([], $result);
+    }
+
+    public function testCurriedEmptyArray(): void
+    {
+        $data = [];
+
+        $map = map(static function ($i) {
+            return $i * 2;
+        });
+
+        $result = $map($data);
+
+        $this->assertSame([], $result);
+    }
+
     public function testInt(): void
     {
         $data = [1, 2, 3];
