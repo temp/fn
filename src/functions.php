@@ -421,6 +421,8 @@ function curryN(int $arity, callable $callable): callable
             return curry2($callable);
         case 3:
             return curry3($callable);
+        case 4:
+            return curry4($callable);
         default:
             throw new RuntimeException('unsupported arity '.$arity);
     }
