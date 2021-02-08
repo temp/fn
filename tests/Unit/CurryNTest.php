@@ -59,6 +59,29 @@ final class CurryNTest extends TestCase
         $this->assertEquals(15, $sum4(5, 10, -4, 4, 8));
     }
 
+    public function testCurryNWithArity5(): void
+    {
+        $sum4 = curryN(5, static function ($a, $b, $c, $d, $e) {
+            return $a + $b + $c + $d + $e;
+        });
+        $plus5 = $sum4(5);
+        $plus10 = $plus5(10);
+        $minus4 = $plus10(-4);
+        $plus4 = $minus4(4);
+        $plus2 = $plus4(2);
+
+        $this->assertEquals($sum4, $sum4());
+        $this->assertEquals(17, $plus2);
+        $this->assertEquals(17, $plus4(2));
+        $this->assertEquals(17, $minus4(4, 2));
+        $this->assertEquals(17, $plus10(-4, 4, 2));
+        $this->assertEquals(17, $plus5(10, -4, 4, 2));
+        $this->assertEquals(17, $sum4(5, 10)(-4, 4, 2));
+        $this->assertEquals(17, $sum4(5, 10, -4)(4, 2));
+        $this->assertEquals(17, $sum4(5, 10, -4, 4, 2));
+        $this->assertEquals(17, $sum4(5, 10, -4, 4, 2, 8));
+    }
+
     public function testCurryNWithUnsupportedArityBelow0(): void
     {
         $this->expectException(RuntimeException::class);
@@ -68,11 +91,11 @@ final class CurryNTest extends TestCase
         });
     }
 
-    public function testCurryNWithUnsupportedArityAbove4(): void
+    public function testCurryNWithUnsupportedArityAbove5(): void
     {
         $this->expectException(RuntimeException::class);
 
-        curryN(5, static function () {
+        curryN(6, static function () {
             return null;
         });
     }

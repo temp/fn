@@ -389,6 +389,40 @@ function curry4(callable $fn): callable
     return $_curry4;
 }
 
+function curry5(callable $fn): callable
+{
+    $_curry5 = static function () use ($fn, &$_curry5) {
+        $args = func_get_args();
+
+        switch (func_num_args()) {
+            case 0:
+                return $_curry5;
+            case 1:
+                return curry4(static function ($b, $c, $d, $e) use ($args, $fn) {
+                    return call_user_func_array($fn, [$args[0], $b, $c, $d, $e]);
+                });
+            case 2:
+                return curry3(static function ($c, $d, $e) use ($args, $fn) {
+                    return call_user_func_array($fn, [$args[0], $args[1], $c, $d, $e]);
+                });
+            case 3:
+                return curry2(static function ($d, $e) use ($args, $fn) {
+                    return call_user_func_array($fn, [$args[0], $args[1], $args[2], $d, $e]);
+                });
+            case 4:
+                return static function ($e) use ($args, $fn) {
+                    return call_user_func_array($fn, [$args[0], $args[1], $args[2], $args[3], $e]);
+                };
+            case 5:
+                return call_user_func_array($fn, $args);
+            default:
+                return call_user_func_array($fn, [$args[0], $args[1], $args[2], $args[3], $args[4]]);
+        }
+    };
+
+    return $_curry5;
+}
+
 /**
  * Wrapper for curry* functions.
  *
@@ -407,6 +441,8 @@ function curryN(int $arity, callable $callable): callable
             return curry3($callable);
         case 4:
             return curry4($callable);
+        case 5:
+            return curry5($callable);
         default:
             throw new RuntimeException('unsupported arity '.$arity);
     }
