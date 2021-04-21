@@ -767,6 +767,48 @@ function join(...$args)
  *
  * @return callable|mixed
  */
+function logicAnd(...$args)
+{
+    $_and = static function ($a, $b) {
+        return $a && $b;
+    };
+
+    return curry2($_and)(...$args);
+}
+
+/**
+ * @param mixed $args
+ *
+ * @return callable|mixed
+ */
+function logicOr(...$args)
+{
+    $_or = static function ($a, $b) {
+        return $a || $b;
+    };
+
+    return curry2($_or)(...$args);
+}
+
+/**
+ * @param mixed $args
+ *
+ * @return callable|mixed
+ */
+function logicXor(...$args)
+{
+    $_xor = static function ($a, $b) {
+        return $a xor $b;
+    };
+
+    return curry2($_xor)(...$args);
+}
+
+/**
+ * @param mixed $args
+ *
+ * @return callable|mixed
+ */
 function map(...$args)
 {
     /**
