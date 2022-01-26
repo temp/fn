@@ -6,6 +6,7 @@ namespace FncTests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use stdClass;
+
 use function Fnc\prop;
 
 /**
@@ -37,7 +38,7 @@ final class PropTest extends TestCase
         $data = new stdClass();
         $data->foo = 'bar';
 
-        $result= prop('foo', $data);
+        $result = prop('foo', $data);
 
         $this->assertSame('bar', $result);
     }

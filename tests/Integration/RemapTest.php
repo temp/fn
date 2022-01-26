@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FncTests\Integration;
 
 use PHPUnit\Framework\TestCase;
+
 use function Fnc\always;
 use function Fnc\applySpec;
 use function Fnc\compose;

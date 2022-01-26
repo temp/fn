@@ -6,6 +6,7 @@ namespace FncTests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
+
 use function Fnc\curryN;
 
 /**

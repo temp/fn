@@ -10,6 +10,7 @@ use ReflectionMethod;
 use ReflectionObject;
 use RuntimeException;
 use stdClass;
+
 use function array_filter;
 use function array_key_exists;
 use function array_keys;
@@ -40,6 +41,7 @@ use function max;
 use function property_exists;
 use function Safe\substr;
 use function strpos;
+
 use const ARRAY_FILTER_USE_BOTH;
 
 // phpcs:disable BrainbitsCodingStandard.Exceptions.GlobalException.GlobalException
@@ -301,8 +303,10 @@ function curry1(callable $fn): callable
         switch (count($args)) {
             case 0:
                 return $_curry1;
+
             case 1:
                 return call_user_func_array($fn, $args);
+
             default:
                 return call_user_func_array($fn, [$args[0]]);
         }
@@ -319,12 +323,15 @@ function curry2(callable $fn): callable
         switch (func_num_args()) {
             case 0:
                 return $_curry2;
+
             case 1:
                 return static function ($b) use ($args, $fn) {
                     return call_user_func_array($fn, [$args[0], $b]);
                 };
+
             case 2:
                 return call_user_func_array($fn, $args);
+
             default:
                 return call_user_func_array($fn, [$args[0], $args[1]]);
         }
@@ -341,16 +348,20 @@ function curry3(callable $fn): callable
         switch (func_num_args()) {
             case 0:
                 return $_curry3;
+
             case 1:
                 return curry2(static function ($b, $c) use ($args, $fn) {
                     return call_user_func_array($fn, [$args[0], $b, $c]);
                 });
+
             case 2:
                 return static function ($c) use ($args, $fn) {
                     return call_user_func_array($fn, [$args[0], $args[1], $c]);
                 };
+
             case 3:
                 return call_user_func_array($fn, $args);
+
             default:
                 return call_user_func_array($fn, [$args[0], $args[1], $args[2]]);
         }
@@ -367,20 +378,25 @@ function curry4(callable $fn): callable
         switch (func_num_args()) {
             case 0:
                 return $_curry4;
+
             case 1:
                 return curry3(static function ($b, $c, $d) use ($args, $fn) {
                     return call_user_func_array($fn, [$args[0], $b, $c, $d]);
                 });
+
             case 2:
                 return curry2(static function ($c, $d) use ($args, $fn) {
                     return call_user_func_array($fn, [$args[0], $args[1], $c, $d]);
                 });
+
             case 3:
                 return static function ($d) use ($args, $fn) {
                     return call_user_func_array($fn, [$args[0], $args[1], $args[2], $d]);
                 };
+
             case 4:
                 return call_user_func_array($fn, $args);
+
             default:
                 return call_user_func_array($fn, [$args[0], $args[1], $args[2], $args[3]]);
         }
@@ -397,24 +413,30 @@ function curry5(callable $fn): callable
         switch (func_num_args()) {
             case 0:
                 return $_curry5;
+
             case 1:
                 return curry4(static function ($b, $c, $d, $e) use ($args, $fn) {
                     return call_user_func_array($fn, [$args[0], $b, $c, $d, $e]);
                 });
+
             case 2:
                 return curry3(static function ($c, $d, $e) use ($args, $fn) {
                     return call_user_func_array($fn, [$args[0], $args[1], $c, $d, $e]);
                 });
+
             case 3:
                 return curry2(static function ($d, $e) use ($args, $fn) {
                     return call_user_func_array($fn, [$args[0], $args[1], $args[2], $d, $e]);
                 });
+
             case 4:
                 return static function ($e) use ($args, $fn) {
                     return call_user_func_array($fn, [$args[0], $args[1], $args[2], $args[3], $e]);
                 };
+
             case 5:
                 return call_user_func_array($fn, $args);
+
             default:
                 return call_user_func_array($fn, [$args[0], $args[1], $args[2], $args[3], $args[4]]);
         }
@@ -433,18 +455,24 @@ function curryN(int $arity, callable $callable): callable
     switch ($arity) {
         case 0:
             return $callable;
+
         case 1:
             return curry1($callable);
+
         case 2:
             return curry2($callable);
+
         case 3:
             return curry3($callable);
+
         case 4:
             return curry4($callable);
+
         case 5:
             return curry5($callable);
+
         default:
-            throw new RuntimeException('unsupported arity '.$arity);
+            throw new RuntimeException('unsupported arity ' . $arity);
     }
 }
 
@@ -1233,27 +1261,38 @@ function _arity(int $n, callable $fn): callable
 
     switch ($n) {
         case 0:
-            return static fn() => $fn(...func_get_args());
+            return static fn () => $fn(...func_get_args());
+
         case 1:
-            return static fn($a0) => $fn(...func_get_args());
+            return static fn ($a0) => $fn(...func_get_args());
+
         case 2:
-            return static fn($a0, $a1) => $fn(...func_get_args());
+            return static fn ($a0, $a1) => $fn(...func_get_args());
+
         case 3:
-            return static fn($a0, $a1, $a2) => $fn(...func_get_args());
+            return static fn ($a0, $a1, $a2) => $fn(...func_get_args());
+
         case 4:
-            return static fn($a0, $a1, $a2, $a3) => $fn(...func_get_args());
+            return static fn ($a0, $a1, $a2, $a3) => $fn(...func_get_args());
+
         case 5:
-            return static fn($a0, $a1, $a2, $a3, $a4) => $fn(...func_get_args());
+            return static fn ($a0, $a1, $a2, $a3, $a4) => $fn(...func_get_args());
+
         case 6:
-            return static fn($a0, $a1, $a2, $a3, $a4, $a5) => $fn(...func_get_args());
+            return static fn ($a0, $a1, $a2, $a3, $a4, $a5) => $fn(...func_get_args());
+
         case 7:
-            return static fn($a0, $a1, $a2, $a3, $a4, $a5, $a6) => $fn(...func_get_args());
+            return static fn ($a0, $a1, $a2, $a3, $a4, $a5, $a6) => $fn(...func_get_args());
+
         case 8:
-            return static fn($a0, $a1, $a2, $a3, $a4, $a5, $a6, $a7) => $fn(...func_get_args());
+            return static fn ($a0, $a1, $a2, $a3, $a4, $a5, $a6, $a7) => $fn(...func_get_args());
+
         case 9:
-            return static fn($a0, $a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8) => $fn(...func_get_args());
+            return static fn ($a0, $a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8) => $fn(...func_get_args());
+
         case 10:
-            return static fn($a0, $a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9) => $fn(...func_get_args());
+            return static fn ($a0, $a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9) => $fn(...func_get_args());
+
         default:
             throw new RuntimeException(
                 'First argument to _arity must be a non-negative integer no greater than ten'
@@ -1265,10 +1304,10 @@ function _arity(int $n, callable $fn): callable
 
 function _pipe(callable $f, callable $g): callable
 {
-    return static fn(...$args) => $g($f(...$args));
+    return static fn (...$args) => $g($f(...$args));
 }
 
 function _complement(callable $f): callable
 {
-    return static fn(...$args) => !$f(...$args);
+    return static fn (...$args) => !$f(...$args);
 }

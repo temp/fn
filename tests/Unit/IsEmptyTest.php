@@ -6,6 +6,7 @@ namespace FncTests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use stdClass;
+
 use function Fnc\isEmpty;
 
 /**

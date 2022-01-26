@@ -7,6 +7,7 @@ namespace FncTests\Unit;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
+
 use function Fnc\_getArity;
 
 // phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses

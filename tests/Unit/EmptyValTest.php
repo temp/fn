@@ -7,6 +7,7 @@ namespace FncTests\Unit;
 use Closure;
 use PHPUnit\Framework\TestCase;
 use stdClass;
+
 use function Fnc\emptyVal;
 
 /**

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FncTests\Unit;
 
 use PHPUnit\Framework\TestCase;
+
 use function Fnc\sum;
 
 // phpcs:disable Generic.PHP.ForbiddenFunctions.FoundWithAlternative
