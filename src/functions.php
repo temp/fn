@@ -39,7 +39,7 @@ use function is_object;
 use function is_string;
 use function max;
 use function property_exists;
-use function Safe\substr;
+use function mb_substr;
 use function strpos;
 
 use const ARRAY_FILTER_USE_BOTH;
