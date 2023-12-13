@@ -9,11 +9,7 @@ use RuntimeException;
 
 use function Fnc\_arity;
 
-// phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
-
-/**
- * @covers \Fnc\_arity
- */
+/** @covers \Fnc\_arity */
 final class _ArityTest extends TestCase
 {
     public function testArityWithArity0(): void

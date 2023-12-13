@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\merge;
 
-/**
- * @covers \Fnc\merge
- */
+/** @covers \Fnc\merge */
 final class MergeTest extends TestCase
 {
     public function testMerge(): void

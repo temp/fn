@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\reduce;
 
-/**
- * @covers \Fnc\reduce
- */
+/** @covers \Fnc\reduce */
 final class ReduceTest extends TestCase
 {
     public function testReduce(): void

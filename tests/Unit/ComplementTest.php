@@ -9,9 +9,7 @@ use PHPUnit\Framework\TestCase;
 use function Fnc\complement;
 use function Fnc\isEmpty;
 
-/**
- * @covers \Fnc\complement
- */
+/** @covers \Fnc\complement */
 final class ComplementTest extends TestCase
 {
     public function testComplement(): void

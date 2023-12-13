@@ -9,11 +9,7 @@ use PHPUnit\Framework\TestCase;
 use function Fnc\_pipe;
 use function round;
 
-// phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
-
-/**
- * @covers \Fnc\_pipe
- */
+/** @covers \Fnc\_pipe */
 final class _PipeTest extends TestCase
 {
     public function testNumericArrayValue(): void

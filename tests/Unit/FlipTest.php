@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\flip;
 
-/**
- * @covers \Fnc\flip
- */
+/** @covers \Fnc\flip */
 final class FlipTest extends TestCase
 {
     public function testFlip(): void

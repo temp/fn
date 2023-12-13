@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\logicAnd;
 
-/**
- * @covers \Fnc\logicAnd
- */
+/** @covers \Fnc\logicAnd */
 final class LogicAndTest extends TestCase
 {
     public function testLogicAnd(): void

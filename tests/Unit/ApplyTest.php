@@ -9,9 +9,7 @@ use PHPUnit\Framework\TestCase;
 use function Fnc\apply;
 use function max;
 
-/**
- * @covers \Fnc\apply
- */
+/** @covers \Fnc\apply */
 final class ApplyTest extends TestCase
 {
     public function testArrayValue(): void

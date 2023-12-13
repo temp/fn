@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\not;
 
-/**
- * @covers \Fnc\not
- */
+/** @covers \Fnc\not */
 final class NotTest extends TestCase
 {
     public function testNot(): void

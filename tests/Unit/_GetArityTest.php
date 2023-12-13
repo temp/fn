@@ -13,12 +13,9 @@ use function Fnc\_getArity;
 // phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
 // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
 // phpcs:disable Squiz.Classes.ClassFileName.NoMatch
-// phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
 // phpcs:disable Squiz.Functions.GlobalFunction.Found
 
-/**
- * @covers \Fnc\_getArity
- */
+/** @covers \Fnc\_getArity */
 final class _GetArityTest extends TestCase
 {
     public static function foo(string $x, int $y): void

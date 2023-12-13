@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\concat;
 
-/**
- * @covers \Fnc\concat
- */
+/** @covers \Fnc\concat */
 final class ConcatTest extends TestCase
 {
     public function testNumericArrayValues(): void

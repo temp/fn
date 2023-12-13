@@ -10,9 +10,7 @@ use function Fnc\join;
 
 // phpcs:disable Generic.PHP.ForbiddenFunctions.FoundWithAlternative
 
-/**
- * @covers \Fnc\join
- */
+/** @covers \Fnc\join */
 final class JoinTest extends TestCase
 {
     public function testWithZeroElements(): void
@@ -37,22 +35,22 @@ final class JoinTest extends TestCase
 
     public function testWithOneElement(): void
     {
-        $data = ['foo', 'bar'];
+        $data = ['foo'];
 
         $result = join('_', $data);
 
-        $this->assertSame('foo_bar', $result);
+        $this->assertSame('foo', $result);
     }
 
     public function testCurriedWithOneElement(): void
     {
-        $data = ['foo', 'bar'];
+        $data = ['foo'];
 
         $join = join('_');
 
         $result = $join($data);
 
-        $this->assertSame('foo_bar', $result);
+        $this->assertSame('foo', $result);
     }
 
     public function testWithMultipleElements(): void

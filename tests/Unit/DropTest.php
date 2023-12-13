@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\drop;
 
-/**
- * @covers \Fnc\drop
- */
+/** @covers \Fnc\drop */
 final class DropTest extends TestCase
 {
     public function testNumericArrayValue(): void

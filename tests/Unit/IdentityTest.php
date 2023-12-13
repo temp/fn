@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\identity;
 
-/**
- * @covers \Fnc\identity
- */
+/** @covers \Fnc\identity */
 final class IdentityTest extends TestCase
 {
     public function testIdentity(): void

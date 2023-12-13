@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\tail;
 
-/**
- * @covers \Fnc\tail
- */
+/** @covers \Fnc\tail */
 final class TailTest extends TestCase
 {
     public function testTail(): void

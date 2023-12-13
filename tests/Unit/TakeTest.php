@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\take;
 
-/**
- * @covers \Fnc\take
- */
+/** @covers \Fnc\take */
 final class TakeTest extends TestCase
 {
     public function testNumericArrayValue(): void

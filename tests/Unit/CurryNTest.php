@@ -9,9 +9,7 @@ use RuntimeException;
 
 use function Fnc\curryN;
 
-/**
- * @covers \Fnc\curryN
- */
+/** @covers \Fnc\curryN */
 final class CurryNTest extends TestCase
 {
     public function testCurryNWithArity2(): void

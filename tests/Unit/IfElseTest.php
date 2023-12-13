@@ -9,9 +9,7 @@ use PHPUnit\Framework\TestCase;
 use function Fnc\always;
 use function Fnc\ifElse;
 
-/**
- * @covers \Fnc\ifElse
- */
+/** @covers \Fnc\ifElse */
 final class IfElseTest extends TestCase
 {
     public function testString(): void

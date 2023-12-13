@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\head;
 
-/**
- * @covers \Fnc\head
- */
+/** @covers \Fnc\head */
 final class HeadTest extends TestCase
 {
     public function testHead(): void

@@ -10,9 +10,7 @@ use function Fnc\always;
 use function Fnc\applySpec;
 use function Fnc\prop;
 
-/**
- * @covers \Fnc\applySpec
- */
+/** @covers \Fnc\applySpec */
 final class ApplySpecTest extends TestCase
 {
     public function testNumericArray(): void

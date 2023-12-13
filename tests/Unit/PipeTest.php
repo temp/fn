@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\pipe;
 
-/**
- * @covers \Fnc\pipe
- */
+/** @covers \Fnc\pipe */
 final class PipeTest extends TestCase
 {
     public function testNumericArrayValue(): void

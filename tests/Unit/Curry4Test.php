@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\curry4;
 
-/**
- * @covers \Fnc\curry4
- */
+/** @covers \Fnc\curry4 */
 final class Curry4Test extends TestCase
 {
     public function testCurry3(): void

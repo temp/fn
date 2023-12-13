@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\paths;
 
-/**
- * @covers \Fnc\paths
- */
+/** @covers \Fnc\paths */
 final class PathsTest extends TestCase
 {
     public function testPath(): void

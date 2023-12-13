@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\compose;
 
-/**
- * @covers \Fnc\compose
- */
+/** @covers \Fnc\compose */
 final class ComposeTest extends TestCase
 {
     public function testCompose(): void

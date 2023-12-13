@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\reverse;
 
-/**
- * @covers \Fnc\reverse
- */
+/** @covers \Fnc\reverse */
 final class ReverseTest extends TestCase
 {
     public function testArrayValue(): void

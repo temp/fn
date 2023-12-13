@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\logicOr;
 
-/**
- * @covers \Fnc\logicOr
- */
+/** @covers \Fnc\logicOr */
 final class LogicOrTest extends TestCase
 {
     public function testLogicOr(): void

@@ -9,9 +9,7 @@ use PHPUnit\Framework\TestCase;
 use function Fnc\all;
 use function Fnc\isEmpty;
 
-/**
- * @covers \Fnc\all
- */
+/** @covers \Fnc\all */
 final class AllTest extends TestCase
 {
     public function testAllNotEmpty(): void

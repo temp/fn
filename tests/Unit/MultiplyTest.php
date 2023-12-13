@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\multiply;
 
-/**
- * @covers \Fnc\multiply
- */
+/** @covers \Fnc\multiply */
 final class MultiplyTest extends TestCase
 {
     public function testMultiply(): void

@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\contains;
 
-/**
- * @covers \Fnc\contains
- */
+/** @covers \Fnc\contains */
 final class ContainsTest extends TestCase
 {
     public function testArrayValue(): void

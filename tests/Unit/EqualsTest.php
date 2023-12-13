@@ -12,9 +12,7 @@ use function Fnc\equals;
 // phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
 // phpcs:disable Squiz.Classes.ClassFileName.NoMatch
 
-/**
- * @covers \Fnc\equals
- */
+/** @covers \Fnc\equals */
 final class EqualsTest extends TestCase
 {
     public function testString(): void

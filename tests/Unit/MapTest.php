@@ -9,9 +9,7 @@ use PHPUnit\Framework\TestCase;
 use function Fnc\map;
 use function strtoupper;
 
-/**
- * @covers \Fnc\map
- */
+/** @covers \Fnc\map */
 final class MapTest extends TestCase
 {
     public function testNull(): void
@@ -22,7 +20,7 @@ final class MapTest extends TestCase
             static function ($i) {
                 return $i * 2;
             },
-            $data
+            $data,
         );
 
         $this->assertSame([], $result);
@@ -49,7 +47,7 @@ final class MapTest extends TestCase
             static function ($i) {
                 return $i * 2;
             },
-            $data
+            $data,
         );
 
         $this->assertSame([], $result);
@@ -76,7 +74,7 @@ final class MapTest extends TestCase
             static function ($i) {
                 return $i * 2;
             },
-            $data
+            $data,
         );
 
         $this->assertSame([2, 4, 6], $result);
@@ -103,7 +101,7 @@ final class MapTest extends TestCase
             static function ($i) {
                 return strtoupper($i);
             },
-            $data
+            $data,
         );
 
         $this->assertSame(['abc' => 'DEF'], $result);

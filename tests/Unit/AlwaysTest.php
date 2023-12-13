@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\always;
 
-/**
- * @covers \Fnc\always
- */
+/** @covers \Fnc\always */
 final class AlwaysTest extends TestCase
 {
     public function testStringValue(): void

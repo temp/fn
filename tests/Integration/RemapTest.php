@@ -61,7 +61,7 @@ final class RemapTest extends TestCase
                         [
                             pipe(prop('creation_date_date'), take(10)),
                             pipe(prop('creation_date_time'), drop(11)),
-                        ]
+                        ],
                     ),
                     'invalid' => ifElse(
                         compose(isEmpty(), prop('invalid_id')),
@@ -106,7 +106,7 @@ final class RemapTest extends TestCase
                     'creation_date_date',
                     'creation_date_time',
                 ]),
-            ]
+            ],
         );
 
         $result = $remap($data);

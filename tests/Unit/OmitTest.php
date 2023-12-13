@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\omit;
 
-/**
- * @covers \Fnc\omit
- */
+/** @covers \Fnc\omit */
 final class OmitTest extends TestCase
 {
     public function testArrayValue(): void

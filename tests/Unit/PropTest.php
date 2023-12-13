@@ -9,9 +9,7 @@ use stdClass;
 
 use function Fnc\prop;
 
-/**
- * @covers \Fnc\prop
- */
+/** @covers \Fnc\prop */
 final class PropTest extends TestCase
 {
     public function testArrayValue(): void

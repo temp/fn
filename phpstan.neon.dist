@@ -3,9 +3,10 @@ parameters:
     paths:
         - src
         - tests
+    scanFiles:
+        - src/functions.php
 
 includes:
-    - vendor/brainbits/phpstan-rules/rules.neon
     - vendor/jangregor/phpstan-prophecy/extension.neon
     - vendor/phpstan/phpstan-phpunit/extension.neon
     - vendor/phpstan/phpstan-phpunit/rules.neon

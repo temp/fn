@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\converge;
 
-/**
- * @covers \Fnc\converge
- */
+/** @covers \Fnc\converge */
 final class ConvergeTest extends TestCase
 {
     public function testConverge(): void

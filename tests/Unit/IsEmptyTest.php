@@ -9,9 +9,7 @@ use stdClass;
 
 use function Fnc\isEmpty;
 
-/**
- * @covers \Fnc\isEmpty
- */
+/** @covers \Fnc\isEmpty */
 final class IsEmptyTest extends TestCase
 {
     public function testString(): void

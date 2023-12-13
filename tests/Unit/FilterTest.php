@@ -9,9 +9,7 @@ use PHPUnit\Framework\TestCase;
 use function Fnc\filter;
 use function Fnc\head;
 
-/**
- * @covers \Fnc\filter
- */
+/** @covers \Fnc\filter */
 final class FilterTest extends TestCase
 {
     public function testFilter(): void
@@ -22,7 +20,7 @@ final class FilterTest extends TestCase
             ['a' => 3, 'b' => 3],
         ];
         $aIsTwo = static function ($item) {
-            return $item['a'] === 2 ? true : false;
+            return $item['a'] === 2;
         };
         $this->assertEquals([1 => ['a' => 2, 'b' => 2]], filter($aIsTwo, $list));
     }
@@ -31,7 +29,7 @@ final class FilterTest extends TestCase
     {
         $list3 = [1, 2];
         $valueIsOne = static function ($v) {
-            return $v === 1 ? true : false;
+            return $v === 1;
         };
         $this->assertEquals(1, head(filter($valueIsOne, $list3)));
     }

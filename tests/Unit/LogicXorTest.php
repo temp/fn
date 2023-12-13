@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\logicXor;
 
-/**
- * @covers \Fnc\logicXor
- */
+/** @covers \Fnc\logicXor */
 final class LogicXorTest extends TestCase
 {
     public function testLogicXor(): void

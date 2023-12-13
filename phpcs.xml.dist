@@ -9,6 +9,9 @@
     <arg name="colors"/>
     <arg value="sp"/>
 
-    <rule ref="BrainbitsCodingStandard"/>
-    <!--rule ref="SlevomatCodingStandard.Functions.TrailingCommaInCall" /-->
+    <rule ref="Brainbits">
+        <exclude name="Brainbits.Exception.GlobalException.GlobalException" />
+        <exclude name="Squiz.Classes.ValidClassName.NotCamelCaps" />
+        <exclude name="Squiz.NamingConventions.ValidVariableName.NotCamelCaps" />
+    </rule>
 </ruleset>

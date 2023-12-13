@@ -10,9 +10,7 @@ use function Fnc\sum;
 
 // phpcs:disable Generic.PHP.ForbiddenFunctions.FoundWithAlternative
 
-/**
- * @covers \Fnc\sum
- */
+/** @covers \Fnc\sum */
 final class SumTest extends TestCase
 {
     public function testSum(): void

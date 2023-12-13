@@ -8,11 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\_complement;
 
-// phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
-
-/**
- * @covers \Fnc\_complement
- */
+/** @covers \Fnc\_complement */
 final class _ComplementTest extends TestCase
 {
     public function testNumericArrayValue(): void

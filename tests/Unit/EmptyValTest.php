@@ -10,9 +10,7 @@ use stdClass;
 
 use function Fnc\emptyVal;
 
-/**
- * @covers \Fnc\emptyVal
- */
+/** @covers \Fnc\emptyVal */
 final class EmptyValTest extends TestCase
 {
     public function testBool(): void

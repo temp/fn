@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\divide;
 
-/**
- * @covers \Fnc\divide
- */
+/** @covers \Fnc\divide */
 final class DivideTest extends TestCase
 {
     public function testDivide(): void

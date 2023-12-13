@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Fnc\unapply;
 
-/**
- * @covers \Fnc\unapply
- */
+/** @covers \Fnc\unapply */
 final class UnapplyTest extends TestCase
 {
     public function testUnapply(): void
