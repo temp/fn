@@ -14,7 +14,6 @@
         "brainbits/phpcs-standard": "^7.0",
         "brainbits/phpstan-rules": "^3.0",
         "phpunit/phpunit": "^10.0",
-        "thecodingmachine/phpstan-safe-rule": "^1.0",
         "jangregor/phpstan-prophecy": "^1.0",
         "phpstan/phpstan-phpunit": "^1.0",
         "symfony/var-dumper": "^7.0"
