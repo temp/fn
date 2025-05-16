@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\multiply;
 
-/** @covers \Fnc\multiply */
+#[CoversFunction('Fnc\multiply')]
 final class MultiplyTest extends TestCase
 {
     public function testMultiply(): void

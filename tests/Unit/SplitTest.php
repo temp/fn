@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\split;
 
 // phpcs:disable Generic.PHP.ForbiddenFunctions.FoundWithAlternative
 
+#[CoversFunction('Fnc\split')]
 final class SplitTest extends TestCase
 {
     public function testWithZeroElements(): void

@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\complement;
 use function Fnc\isEmpty;
 
-/** @covers \Fnc\complement */
+#[CoversFunction('Fnc\complement')]
 final class ComplementTest extends TestCase
 {
     public function testComplement(): void

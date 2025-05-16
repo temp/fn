@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\map;
 use function strtoupper;
 
-/** @covers \Fnc\map */
+#[CoversFunction('Fnc\map')]
 final class MapTest extends TestCase
 {
     public function testNull(): void

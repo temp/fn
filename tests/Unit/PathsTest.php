@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\paths;
 
-/** @covers \Fnc\paths */
+#[CoversFunction('Fnc\paths')]
 final class PathsTest extends TestCase
 {
     public function testPath(): void

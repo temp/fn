@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\always;
 
-/** @covers \Fnc\always */
+#[CoversFunction('Fnc\always')]
 final class AlwaysTest extends TestCase
 {
     public function testStringValue(): void

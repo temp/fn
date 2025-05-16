@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\apply;
 use function max;
 
-/** @covers \Fnc\apply */
+#[CoversFunction('Fnc\apply')]
 final class ApplyTest extends TestCase
 {
     public function testArrayValue(): void

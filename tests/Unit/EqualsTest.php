@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -12,7 +13,7 @@ use function Fnc\equals;
 // phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
 // phpcs:disable Squiz.Classes.ClassFileName.NoMatch
 
-/** @covers \Fnc\equals */
+#[CoversFunction('Fnc\equals')]
 final class EqualsTest extends TestCase
 {
     public function testString(): void

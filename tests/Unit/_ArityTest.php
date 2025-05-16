@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 use function Fnc\_arity;
 
-/** @covers \Fnc\_arity */
+#[CoversFunction('Fnc\_arity')]
 final class _ArityTest extends TestCase
 {
     public function testArityWithArity0(): void

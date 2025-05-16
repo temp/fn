@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\reverse;
 
-/** @covers \Fnc\reverse */
+#[CoversFunction('Fnc\reverse')]
 final class ReverseTest extends TestCase
 {
     public function testArrayValue(): void

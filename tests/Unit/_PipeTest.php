@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\_pipe;
 use function round;
 
-/** @covers \Fnc\_pipe */
+#[CoversFunction('Fnc\_pipe')]
 final class _PipeTest extends TestCase
 {
     public function testNumericArrayValue(): void

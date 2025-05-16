@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\tail;
 
-/** @covers \Fnc\tail */
+#[CoversFunction('Fnc\tail')]
 final class TailTest extends TestCase
 {
     public function testTail(): void

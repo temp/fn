@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\omit;
 
-/** @covers \Fnc\omit */
+#[CoversFunction('Fnc\omit')]
 final class OmitTest extends TestCase
 {
     public function testArrayValue(): void

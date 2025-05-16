@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\always;
 use function Fnc\applySpec;
 use function Fnc\prop;
 
-/** @covers \Fnc\applySpec */
+#[CoversFunction('Fnc\applySpec')]
 final class ApplySpecTest extends TestCase
 {
     public function testNumericArray(): void

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\flip;
 
-/** @covers \Fnc\flip */
+#[CoversFunction('Fnc\flip')]
 final class FlipTest extends TestCase
 {
     public function testFlip(): void

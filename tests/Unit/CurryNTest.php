@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 use function Fnc\curryN;
 
-/** @covers \Fnc\curryN */
+#[CoversFunction('Fnc\curryN')]
 final class CurryNTest extends TestCase
 {
     public function testCurryNWithArity2(): void

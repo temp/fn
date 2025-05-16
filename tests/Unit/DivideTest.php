@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\divide;
 
-/** @covers \Fnc\divide */
+#[CoversFunction('Fnc\divide')]
 final class DivideTest extends TestCase
 {
     public function testDivide(): void

@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace FncTests\Unit;
 
 use Closure;
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
 use function Fnc\emptyVal;
 
-/** @covers \Fnc\emptyVal */
+#[CoversFunction('Fnc\emptyVal')]
 final class EmptyValTest extends TestCase
 {
     public function testBool(): void

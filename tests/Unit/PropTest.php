@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
 use function Fnc\prop;
 
-/** @covers \Fnc\prop */
+#[CoversFunction('Fnc\prop')]
 final class PropTest extends TestCase
 {
     public function testArrayValue(): void
