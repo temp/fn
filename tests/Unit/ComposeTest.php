@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\compose;
 
-/** @covers \Fnc\compose */
+#[CoversFunction('Fnc\compose')]
 final class ComposeTest extends TestCase
 {
     public function testCompose(): void

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\merge;
 
-/** @covers \Fnc\merge */
+#[CoversFunction('Fnc\merge')]
 final class MergeTest extends TestCase
 {
     public function testMerge(): void

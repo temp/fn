@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
@@ -15,7 +16,7 @@ use function Fnc\_getArity;
 // phpcs:disable Squiz.Classes.ClassFileName.NoMatch
 // phpcs:disable Squiz.Functions.GlobalFunction.Found
 
-/** @covers \Fnc\_getArity */
+#[CoversFunction('Fnc\_getArity')]
 final class _GetArityTest extends TestCase
 {
     public static function foo(string $x, int $y): void

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\logicXor;
 
-/** @covers \Fnc\logicXor */
+#[CoversFunction('Fnc\logicXor')]
 final class LogicXorTest extends TestCase
 {
     public function testLogicXor(): void

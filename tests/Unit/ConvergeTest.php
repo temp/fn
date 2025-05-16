@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\converge;
 
-/** @covers \Fnc\converge */
+#[CoversFunction('Fnc\converge')]
 final class ConvergeTest extends TestCase
 {
     public function testConverge(): void

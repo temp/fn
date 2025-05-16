@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
 use function Fnc\isEmpty;
 
-/** @covers \Fnc\isEmpty */
+#[CoversFunction('Fnc\isEmpty')]
 final class IsEmptyTest extends TestCase
 {
     public function testString(): void

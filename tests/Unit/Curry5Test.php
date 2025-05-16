@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\curry5;
 
-/** @covers \Fnc\curry5 */
+#[CoversFunction('Fnc\curry5')]
 final class Curry5Test extends TestCase
 {
     public function testCurry3(): void

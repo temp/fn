@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\take;
 
-/** @covers \Fnc\take */
+#[CoversFunction('Fnc\take')]
 final class TakeTest extends TestCase
 {
     public function testNumericArrayValue(): void

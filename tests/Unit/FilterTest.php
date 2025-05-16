@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\filter;
 use function Fnc\head;
 
-/** @covers \Fnc\filter */
+#[CoversFunction('Fnc\filter')]
 final class FilterTest extends TestCase
 {
     public function testFilter(): void

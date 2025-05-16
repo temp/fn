@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\all;
 use function Fnc\isEmpty;
 
-/** @covers \Fnc\all */
+#[CoversFunction('Fnc\all')]
 final class AllTest extends TestCase
 {
     public function testAllNotEmpty(): void

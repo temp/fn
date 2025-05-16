@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\sum;
 
 // phpcs:disable Generic.PHP.ForbiddenFunctions.FoundWithAlternative
 
-/** @covers \Fnc\sum */
+#[CoversFunction('Fnc\sum')]
 final class SumTest extends TestCase
 {
     public function testSum(): void

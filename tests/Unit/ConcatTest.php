@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 use function Fnc\concat;
 
-/** @covers \Fnc\concat */
+#[CoversFunction('Fnc\concat')]
 final class ConcatTest extends TestCase
 {
     public function testNumericArrayValues(): void
