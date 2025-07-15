@@ -25,6 +25,15 @@ final class EqualsTest extends TestCase
         $this->assertFalse(equals('1.0', 1.0));
     }
 
+    public function testStringCurried(): void
+    {
+        $this->assertTrue(equals('a')('a'));
+        $this->assertFalse(equals('a')('b'));
+        $this->assertFalse(equals('a')(''));
+        $this->assertFalse(equals('1')(1));
+        $this->assertFalse(equals('1.0')(1.0));
+    }
+
     public function testInt(): void
     {
         $this->assertTrue(equals(22, 22));
