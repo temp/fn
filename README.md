@@ -1,5 +1,7 @@
 # fnc
 
+[![Coverage Status](https://img.shields.io/codecov/c/github/temp/fnc)](https://app.codecov.io/gh/temp/fnc)
+
 A [Ramda](https://ramdajs.com/)-inspired functional programming library for PHP.
 
 All functions live in the `Fnc` namespace, are plain functions (no classes) and most of them are

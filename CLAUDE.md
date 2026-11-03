@@ -23,7 +23,9 @@ vendor/bin/phpcs                       # coding standard (brainbits/phpcs-standa
 
 CI (`.github/workflows/build.yml`) runs composer validate/audit, phpcs and phpstan on PHP 8.5 and the tests on
 PHP 8.4 and 8.5 with lowest and highest dependencies. phpcs only runs with the highest dependencies; the lowest
-coding standard version reports different violations.
+coding standard version reports different violations. `.github/workflows/code_coverage.yaml` uploads coverage (pcov,
+PHP 8.5) to Codecov. Line coverage is 100 %; `#[CoversFunction]` only counts lines of the named function, so internal
+helpers need their own `Internal*Test`.
 
 ## How functions are built
 
