@@ -273,7 +273,9 @@ function ascend(mixed ...$args): mixed
 
 /**
  * Comparator for `sortWith()` like `ascend()`, but compares the results of the function with the given comparison
- * function, e.g. `strcmp(...)` for byte-wise string order or `strnatcasecmp(...)`.
+ * function, e.g. `strcmp(...)` for byte-wise string order or `strnatcasecmp(...)`. These require strings; for values
+ * that may be ints, use `static fn ($a, $b) => strcmp((string) $a, (string) $b)`. The comparison function may
+ * return any number or a bool, like for `usort()`.
  *
  * Signature: `ascendWith(callable $compare, callable $fn, $a, $b): int`, curried.
  *
@@ -283,7 +285,8 @@ function ascend(mixed ...$args): mixed
 function ascendWith(mixed ...$args): mixed
 {
     $_ascendWith = static function (callable $compare, callable $fn, $a, $b): int {
-        return $compare($fn($a), $fn($b));
+        // normalise floats and bools returned by the comparison function, as usort() accepts them too
+        return $compare($fn($a), $fn($b)) <=> 0;
     };
 
     return curry4($_ascendWith)(...$args);
@@ -777,7 +780,7 @@ function descend(mixed ...$args): mixed
 function descendWith(mixed ...$args): mixed
 {
     $_descendWith = static function (callable $compare, callable $fn, $a, $b): int {
-        return $compare($fn($b), $fn($a));
+        return $compare($fn($b), $fn($a)) <=> 0;
     };
 
     return curry4($_descendWith)(...$args);

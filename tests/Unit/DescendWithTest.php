@@ -34,4 +34,13 @@ final class DescendWithTest extends TestCase
 
         $this->assertSame(['3', '1', '2'], array_column($sorted, 'id'));
     }
+
+    public function testFloatComparator(): void
+    {
+        $values = [['v' => 0.1], ['v' => 0.3], ['v' => 0.2]];
+
+        $sorted = sortWith([descendWith(static fn ($a, $b) => $a - $b, prop('v'))], $values);
+
+        $this->assertSame([0.3, 0.2, 0.1], array_column($sorted, 'v'));
+    }
 }
