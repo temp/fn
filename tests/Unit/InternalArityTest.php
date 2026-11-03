@@ -11,7 +11,7 @@ use RuntimeException;
 use function Fnc\_arity;
 
 #[CoversFunction('Fnc\_arity')]
-final class _ArityTest extends TestCase
+final class InternalArityTest extends TestCase
 {
     public function testArityWithArity0(): void
     {

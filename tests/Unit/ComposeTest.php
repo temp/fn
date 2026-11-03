@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
@@ -28,5 +29,12 @@ final class ComposeTest extends TestCase
         $result = $combo(5);
 
         $this->assertEquals(150, $result);
+    }
+
+    public function testComposeWithoutFunctions(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        compose();
     }
 }

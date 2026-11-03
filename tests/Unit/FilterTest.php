@@ -7,6 +7,7 @@ namespace FncTests\Unit;
 use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
+use function Fnc\curry2;
 use function Fnc\filter;
 use function Fnc\head;
 
@@ -43,5 +44,23 @@ final class FilterTest extends TestCase
         };
 
         $this->assertEquals(1, head(filter($valueIsOne, $list4)));
+    }
+
+    public function testFilterWithInternalFunction(): void
+    {
+        $this->assertSame([0 => 1, 2 => '3'], filter('is_numeric', [1, 'a', '3']));
+    }
+
+    public function testFilterWithInternalFunctionWithOptionalParameter(): void
+    {
+        // trim() has an optional second parameter that must not receive the key
+        $this->assertSame([1 => 'x'], filter('trim', [' ', 'x']));
+    }
+
+    public function testCurriedCallbackReceivesKey(): void
+    {
+        $evenKey = curry2(static fn ($v, $k) => $k % 2 === 0);
+
+        $this->assertSame([0 => 'a', 2 => 'c'], filter($evenKey, ['a', 'b', 'c', 'd']));
     }
 }

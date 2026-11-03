@@ -55,4 +55,11 @@ final class MultiplyTest extends TestCase
 
         $this->assertSame(36, $result);
     }
+
+    public function testFloatZeroStaysFloat(): void
+    {
+        $this->assertSame(0.0, multiply(0.0, 1.5));
+        $this->assertSame(0.0, multiply(1.5, 0.0));
+        $this->assertSame(3.0, multiply(2, 1.5));
+    }
 }

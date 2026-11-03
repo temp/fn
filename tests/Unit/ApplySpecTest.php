@@ -55,4 +55,12 @@ final class ApplySpecTest extends TestCase
 
         $this->assertSame(['a' => 1, 'b' => ['c' => 2, 'd' => 3]], $result);
     }
+
+    public function testNestedSpecKeepsArity(): void
+    {
+        $spec = applySpec(['n' => ['sum' => static fn ($a, $b) => $a + $b]]);
+
+        $this->assertSame(['n' => ['sum' => 3]], $spec(1)(2));
+        $this->assertSame(['n' => ['sum' => 3]], $spec(1, 2));
+    }
 }

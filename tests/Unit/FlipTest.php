@@ -26,4 +26,11 @@ final class FlipTest extends TestCase
         $g = flip($f);
         $this->assertEquals('bac', $g('a', 'b', 'c'));
     }
+
+    public function testFlipVariadic(): void
+    {
+        $flipped = flip(static fn (...$args) => $args);
+
+        $this->assertSame([2, 1], $flipped(1, 2));
+    }
 }

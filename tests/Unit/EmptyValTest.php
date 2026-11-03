@@ -104,4 +104,18 @@ final class EmptyValTest extends TestCase
 
         $this->assertInstanceOf(Closure::class, $result);
     }
+
+    public function testCallableString(): void
+    {
+        $result = emptyVal('trim');
+
+        $this->assertSame('', $result);
+    }
+
+    public function testCallableArray(): void
+    {
+        $result = emptyVal([$this, 'testCallableArray']);
+
+        $this->assertSame([], $result);
+    }
 }

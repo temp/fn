@@ -10,6 +10,8 @@ use RuntimeException;
 use stdClass;
 
 use function Fnc\_getArity;
+use function Fnc\curry2;
+use function Fnc\curry3;
 
 // phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
 // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
@@ -17,7 +19,7 @@ use function Fnc\_getArity;
 // phpcs:disable Squiz.Functions.GlobalFunction.Found
 
 #[CoversFunction('Fnc\_getArity')]
-final class _GetArityTest extends TestCase
+final class InternalGetArityTest extends TestCase
 {
     public static function foo(string $x, int $y): void
     {
@@ -25,14 +27,14 @@ final class _GetArityTest extends TestCase
 
     public function testStaticMethodString(): void
     {
-        $result = _getArity('\FncTests\Unit\_GetArityTest::foo');
+        $result = _getArity('\FncTests\Unit\InternalGetArityTest::foo');
 
         $this->assertEquals(2, $result);
     }
 
     public function testStaticMethodArray(): void
     {
-        $result = _getArity(['\FncTests\Unit\_GetArityTest', 'foo']);
+        $result = _getArity(['\FncTests\Unit\InternalGetArityTest', 'foo']);
 
         $this->assertEquals(2, $result);
     }
@@ -84,6 +86,24 @@ final class _GetArityTest extends TestCase
         $this->expectExceptionMessage('Could not examine callback');
 
         _getArity(new stdClass());
+    }
+
+    public function testCurriedClosures(): void
+    {
+        $fn3 = static fn ($a, $b, $c) => $a + $b + $c;
+
+        $this->assertSame(2, _getArity(curry2(static fn ($a, $b) => $a + $b)));
+        $this->assertSame(3, _getArity(curry3($fn3)));
+        $this->assertSame(2, _getArity(curry3($fn3)(1)));
+        $this->assertSame(1, _getArity(curry3($fn3)(1, 2)));
+    }
+
+    public function testOptionalAndVariadicParametersDoNotCount(): void
+    {
+        $this->assertSame(1, _getArity('trim'));
+        $this->assertSame(1, _getArity(static fn ($a, $b = 1) => $a + $b));
+        $this->assertSame(0, _getArity(static fn (...$args) => $args));
+        $this->assertSame(1, _getArity(static fn ($a, ...$rest) => $a));
     }
 }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
@@ -27,5 +28,12 @@ final class PipeTest extends TestCase
         $pipe = pipe($square, $double, $triple);
 
         $this->assertEquals(150, $pipe(5));
+    }
+
+    public function testPipeWithoutFunctions(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        pipe();
     }
 }

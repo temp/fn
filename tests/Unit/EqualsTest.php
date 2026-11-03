@@ -10,6 +10,8 @@ use stdClass;
 
 use function Fnc\equals;
 
+use const NAN;
+
 // phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
 // phpcs:disable Squiz.Classes.ClassFileName.NoMatch
 
@@ -83,9 +85,87 @@ final class EqualsTest extends TestCase
         $this->assertFalse(equals($a, $c));
         $this->assertFalse(equals($a, $d));
     }
+
+    public function testListOrderMatters(): void
+    {
+        $this->assertFalse(equals([1, 2], [2, 1]));
+        $this->assertFalse(equals([1, 1, 2], [1, 2, 2]));
+        $this->assertFalse(equals([1, 2], [1, 2, 2]));
+    }
+
+    public function testAssociativeKeyOrderDoesNotMatter(): void
+    {
+        $this->assertTrue(equals(['a' => 1, 'b' => 2], ['b' => 2, 'a' => 1]));
+    }
+
+    public function testObjectAndArrayAreNotEqual(): void
+    {
+        $this->assertFalse(equals((object) ['a' => 1], ['a' => 1]));
+        $this->assertFalse(equals(['a' => 1], (object) ['a' => 1]));
+    }
+
+    public function testObjectsOfDifferentClassesAreNotEqual(): void
+    {
+        $a = new Foo(123);
+        $b = new OtherFoo(123);
+
+        $this->assertFalse(equals($a, $b));
+    }
+
+    public function testClosuresAreComparedByIdentity(): void
+    {
+        $fn = static fn () => 1;
+
+        $this->assertTrue(equals($fn, $fn));
+        $this->assertFalse(equals($fn, static fn () => 1));
+        $this->assertFalse(equals([$fn], [static fn () => 1]));
+    }
+
+    public function testCyclicObjects(): void
+    {
+        $a = new stdClass();
+        $a->self = $a;
+        $b = new stdClass();
+        $b->self = $b;
+        $c = new stdClass();
+        $c->self = $c;
+        $c->extra = 1;
+
+        $this->assertTrue(equals($a, $b));
+        $this->assertFalse(equals($a, $c));
+    }
+
+    public function testNan(): void
+    {
+        $this->assertTrue(equals(NAN, NAN));
+        $this->assertTrue(equals([NAN], [NAN]));
+        $this->assertFalse(equals(NAN, 0.0));
+    }
+
+    public function testCurriedComparisonsDoNotShareState(): void
+    {
+        $isEmptyObject = equals(new stdClass());
+
+        $this->assertTrue($isEmptyObject(new stdClass()));
+        $this->assertTrue($isEmptyObject(new stdClass()));
+
+        $withProperty = new stdClass();
+        $withProperty->a = 1;
+        $this->assertFalse($isEmptyObject($withProperty));
+    }
 }
 
 class Foo
+{
+    private $bar; // phpcs:ignore
+
+    public function __construct($bar) // phpcs:ignore
+    {
+        $this->bar = $bar;
+    }
+}
+
+class OtherFoo
 {
     private $bar; // phpcs:ignore
 
