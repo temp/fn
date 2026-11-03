@@ -2,14 +2,18 @@
 
 include __DIR__.'/../vendor/autoload.php';
 
+use function Fnc\all;
 use function Fnc\any;
 use function Fnc\applySpec;
+use function Fnc\ascend;
 use function Fnc\chain;
+use function Fnc\descend;
 use function Fnc\filter;
 use function Fnc\find;
 use function Fnc\flatten;
 use function Fnc\groupBy;
 use function Fnc\head;
+use function Fnc\lt;
 use function Fnc\map;
 use function Fnc\mean;
 use function Fnc\none;
@@ -23,6 +27,7 @@ use function Fnc\reduce;
 use function Fnc\reject;
 use function Fnc\reverse;
 use function Fnc\sortBy;
+use function Fnc\sortWith;
 use function Fnc\sum;
 use function Fnc\tail;
 use function Fnc\take;
@@ -51,18 +56,21 @@ $report = applySpec([
         map(prop('id')),
     ),
     'orders_by_status' => pipe(groupBy(prop('status')), map(pluck('id'))),
+    // sortWith() sorts by several comparators, the next one breaks ties
+    'by_customer_then_total' => pipe(sortWith([ascend(prop('customer')), descend(prop('total'))]), pluck('id')),
     // partition() splits into [matching, others] in one pass, keys are preserved
     'paid_and_unpaid_ids' => pipe(partition(propEq('paid', 'status')), map(pluck('id'))),
     'first_open_order' => pipe(find(propEq('open', 'status')), prop('id')),
     'third_order' => pipe(nth(2), prop('id')),
+    // lt(0) reads "0 < …"
+    'all_totals_positive' => all(pipe(prop('total'), lt(0))),
     'has_open_orders' => any(propEq('open', 'status')),
     'nothing_refunded' => none(propEq('refunded', 'status')),
     // chain() maps to lists and concatenates them, flatten() does the same for already nested lists
     'all_items' => pipe(chain(prop('items')), uniq()),
     'item_count' => pipe(pluck('items'), flatten(), 'count'),
-    // head() and tail() are not curried, pass them as first-class callables
-    'first_id' => pipe(pluck('id'), head(...)),
-    'other_ids' => pipe(pluck('id'), tail(...)),
+    'first_id' => pipe(pluck('id'), head()),
+    'other_ids' => pipe(pluck('id'), tail()),
     'ids_newest_first' => pipe(pluck('id'), reverse()),
     // reduce() for anything the other functions don't cover
     'total_per_customer' => reduce(

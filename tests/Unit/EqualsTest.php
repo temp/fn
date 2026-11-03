@@ -157,20 +157,20 @@ final class EqualsTest extends TestCase
 
 class Foo
 {
-    private $bar; // phpcs:ignore
-
-    public function __construct($bar) // phpcs:ignore
-    {
-        $this->bar = $bar;
+    public function __construct(
+        // only compared by equals() through an array cast
+        // @phpstan-ignore property.onlyWritten
+        private int $bar,
+    ) {
     }
 }
 
 class OtherFoo
 {
-    private $bar; // phpcs:ignore
-
-    public function __construct($bar) // phpcs:ignore
-    {
-        $this->bar = $bar;
+    public function __construct(
+        // only compared by equals() through an array cast
+        // @phpstan-ignore property.onlyWritten
+        private int $bar,
+    ) {
     }
 }

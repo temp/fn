@@ -1,4 +1,4 @@
-# fn
+# fnc
 
 A [Ramda](https://ramdajs.com/)-inspired functional programming library for PHP.
 
@@ -27,8 +27,11 @@ $adultNames([
 ## Installation
 
 ```bash
-composer require temp/fn
+composer require temp/fnc
 ```
+
+The package was called `temp/fn` up to 1.0, so versions 1.0 and older are only available under that name. `temp/fnc`
+replaces `temp/fn`, Composer never installs both. The namespace `Fnc` is unchanged.
 
 Requires PHP 8.4 or later. The functions are loaded via Composer's `files` autoloading, so importing them with
 `use function Fnc\…;` is all you need.
@@ -139,6 +142,10 @@ $toDto(['id' => 7, 'wheelhotel_id' => 'W1', 'wheelhotel_name' => 'North', 'rim_b
 ```
 
 Keys only read by callables (`rim_brand_*` above) stay in the record; combine with `omit()` if they should go.
+Note that an `omit()` after `remap()` runs on the result, so don't list keys the spec produces there.
+
+When migrating from `converge(merge(), [applySpec([...]), omit([...])])`: there, a record key that wasn't omitted won
+over a computed key of the same name. With `remap()` the computed key wins.
 Because strings are always keys, pass named functions as closures (`trim(...)`). Arrays are always nested specs,
 so wrap array callables like `[$object, 'method']` in a closure as well.
 
@@ -151,11 +158,11 @@ More complete examples are in the [`examples/`](examples) directory, run them e.
 | `06-content-type.php` | Deriving a MIME type with `split`, `last`, `cond` and `flip(includes())` |
 | `07-jira-issue-to-dto.php` | An issue tracker ticket with custom fields mapped to a DTO: `path`, unit conversions with `flip(divide())`, `converge`, `unless`/`ifElse` for optional values, `filter`/`pick` on nested lists |
 | `08-optional-groups.php` | Outputting a group of fields only if one of them is filled |
-| `09-list-processing.php` | Lists of records: `filter`/`reject`/`partition`, `find`, `pluck`, `sortBy`, `groupBy`, `uniq`, `chain`/`flatten`, `nth`, `head`/`tail`, `any`/`none`, `mean`, `reduce` |
+| `09-list-processing.php` | Lists of records: `filter`/`reject`/`partition`, `find`, `pluck`, `sortBy`, `groupBy`, `uniq`, `chain`/`flatten`, `nth`, `head`/`tail`, `all`/`any`/`none`, `sortWith` with `ascend`/`descend`, `mean`, `reduce` |
 | `10-currying.php` | Partial application, argument order, `flip`, `curryN`/`curry2`, curried math (`min`/`max`, `inc`/`dec`, `multiply`/`divide`), `identity`, `apply` |
 | `11-conditions.php` | Predicates and defaults: `propEq`/`pathEq`, `gt`/`lt`, `allPass`/`anyPass`, `both`/`either`, `has`, `not`, `propSatisfies`/`pathSatisfies`, `cond`, `when`/`unless`, `propOr`/`pathOr`/`defaultTo`, `logicAnd`/`logicOr`/`logicXor`, `emptyVal`/`isEmpty` |
 | `12-updating-records.php` | Immutable updates with `evolve`, `assoc`, `assocPath`, `pick`, `omit`, `tap`; reading with `keys`/`values`, `path`/`paths`; `concat` |
-| `13-remap-database-record.php` | Turning flat SQL rows into nested DTOs with `remap`, `propSatisfies`, `slice`, `sortWith` |
+| `13-remap-database-record.php` | Turning flat SQL rows into nested DTOs with `remap`, `propSatisfies`, `slice`, `sortWith` with `ascendWith`/`descendWith` |
 
 ## Functions
 
@@ -168,13 +175,15 @@ C = curried.
 | `always($value)` | | Returns a function that always returns `$value`. |
 | `apply($fn, $args)` | ✓ | Calls `$fn` with the elements of `$args` as arguments. |
 | `applySpec($spec)` | ✓ | Returns a function that builds an array shaped like `$spec`, applying each function in it to the arguments. |
-| `ascend($fn, $a, $b)` | ✓ | Comparator for `sortWith()`: `$fn($a) <=> $fn($b)`. |
+| `ascend($fn, $a, $b)` | ✓ | Comparator for `sortWith()`: `$fn($a) <=> $fn($b)` (numeric strings compare numerically). |
+| `ascendWith($compare, $fn, $a, $b)` | ✓ | Like `ascend()`, but compares with `$compare`, e.g. `strcmp(...)` for byte-wise string order. |
 | `complement($fn)` | | Returns a function returning the negated result of `$fn`. |
 | `compose(...$fns)` | | Right-to-left composition. The rightmost function may have any arity, the others must be unary. |
 | `converge($after, $fns)` | ✓ | Applies all `$fns` to the arguments and passes their results to `$after`. |
 | `curry1($fn)` … `curry5($fn)` | | Curries a function of arity 1 to 5. |
 | `curryN($arity, $fn)` | | Curries `$fn` with the given arity (0 to 5). |
 | `descend($fn, $a, $b)` | ✓ | Comparator for `sortWith()`: `$fn($b) <=> $fn($a)`. |
+| `descendWith($compare, $fn, $a, $b)` | ✓ | Like `descend()`, but compares with `$compare`. |
 | `flip($fn, $arity = null)` | | Returns `$fn` with the first two arguments swapped, curried. |
 | `identity($value)` | ✓ | Returns `$value`. |
 | `pipe(...$fns)` | | Left-to-right composition. The first function may have any arity, the others must be unary. |
@@ -195,7 +204,7 @@ C = curried.
 | `find($predicate, $list)` | ✓ | First matching element, `null` if none. |
 | `flatten($list)` | ✓ | Flattens nested arrays into one list. |
 | `groupBy($fn, $list)` | ✓ | Groups the elements by the key `$fn` returns, each group is a list. |
-| `head($list)` | | First element, `null` for an empty list. |
+| `head($listOrString)` | ✓ | First element (`null` for an empty list) or first character. |
 | `includes($needle, $listOrString)` | ✓ | `true` if the list contains an element equal to `$needle` (in `equals()` terms) or the string contains it. |
 | `join($separator, $list)` | ✓ | `implode()`. |
 | `last($listOrString)` | ✓ | Last element (`null` for an empty list) or last character. |
@@ -213,7 +222,7 @@ C = curried.
 | `sortWith($comparators, $list)` | ✓ | Sorts by several comparators (`ascend()`/`descend()`), the next one breaks ties. Returns a list. |
 | `split($separator, $string)` | ✓ | `explode()`. |
 | `sum($list)` | ✓ | Sum of all elements, `0` for an empty list. |
-| `tail($list)` | | All but the first element. |
+| `tail($listOrString)` | ✓ | All but the first element or character. |
 | `take($n, $listOrString)` | ✓ | The first `$n` elements or characters. |
 | `uniq($list)` | ✓ | Removes duplicates (in `equals()` terms), keeps the first occurrence. Returns a list. |
 
@@ -294,6 +303,8 @@ Functions prefixed with an underscore (`_getArity()`, `_arity()`, …) are inter
 - **`uniq()`** compares each element with all kept ones, which is quadratic. For large lists of scalars,
   `array_unique()` is faster.
 - **`isEmpty()`** differs from Ramda for `0` and `null`, which are considered empty here.
+- **Strings** in `head()`, `tail()`, `last()`, `nth()`, `take()`, `drop()` and `slice()` are handled byte-wise like
+  `substr()`, so multibyte characters such as `Ä` can be cut in half.
 - **`filter()`** keeps the keys of the input. Use `array_values()` if you need a list again.
 - **Callbacks** for `filter()` and `reduce()` only receive the key when they declare a parameter for it, so internal
   functions such as `is_numeric` or `trim` can be passed directly.

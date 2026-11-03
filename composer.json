@@ -1,5 +1,5 @@
 {
-    "name": "temp/fn",
+    "name": "temp/fnc",
     "description": "A Ramda-inspired functional programming library for PHP.",
     "license": "MIT",
     "authors": [
@@ -10,6 +10,9 @@
     ],
     "require": {
         "php": "^8.4"
+    },
+    "replace": {
+        "temp/fn": "self.version"
     },
     "require-dev": {
         "brainbits/phpcs-standard": "^8.0",

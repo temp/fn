@@ -77,6 +77,7 @@ final class PropTest extends TestCase
     {
         $data = new class {
             public string $visible = 'yes';
+            // @phpstan-ignore property.onlyWritten
             private string $hidden = 'no'; // phpcs:ignore
             protected string $guarded = 'no'; // phpcs:ignore
         };

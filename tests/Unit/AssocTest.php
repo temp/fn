@@ -22,16 +22,18 @@ final class AssocTest extends TestCase
         $this->assertSame(['a' => 2], assoc('a', 2, ['a' => 1]));
     }
 
-    public function testDoesNotModifyInput(): void
-    {
-        $input = ['a' => 1];
-        assoc('a', 2, $input);
-
-        $this->assertSame(['a' => 1], $input);
-    }
-
     public function testCurried(): void
     {
         $this->assertSame(['a' => 1, 'b' => 2], assoc('b')(2)(['a' => 1]));
+    }
+
+    public function testDoesNotModifyInput(): void
+    {
+        $input = ['a' => 1];
+
+        $result = assoc('a', 2, $input);
+
+        $this->assertSame(['a' => 2], $result);
+        $this->assertSame(['a' => 1], $input); // @phpstan-ignore method.alreadyNarrowedType
     }
 }
