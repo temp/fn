@@ -31,7 +31,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v4"
+        uses: "actions/checkout@v7"
         with:
           # the commit whose build succeeded; if main moved on meanwhile, semantic-release skips this run
           ref: "${{ github.event.workflow_run.head_sha }}"
