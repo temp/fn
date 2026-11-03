@@ -10,6 +10,8 @@ use RuntimeException;
 use stdClass;
 
 use function Fnc\_getArity;
+use function Fnc\curry2;
+use function Fnc\curry3;
 
 // phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
 // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
@@ -84,6 +86,16 @@ final class InternalGetArityTest extends TestCase
         $this->expectExceptionMessage('Could not examine callback');
 
         _getArity(new stdClass());
+    }
+
+    public function testCurriedClosures(): void
+    {
+        $fn3 = static fn ($a, $b, $c) => $a + $b + $c;
+
+        $this->assertSame(2, _getArity(curry2(static fn ($a, $b) => $a + $b)));
+        $this->assertSame(3, _getArity(curry3($fn3)));
+        $this->assertSame(2, _getArity(curry3($fn3)(1)));
+        $this->assertSame(1, _getArity(curry3($fn3)(1, 2)));
     }
 }
 

@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Fnc;
 
 use Closure;
+use InvalidArgumentException;
 use ReflectionFunction;
+use ReflectionFunctionAbstract;
 use ReflectionMethod;
 use ReflectionObject;
 use RuntimeException;
 use stdClass;
+use WeakMap;
 
 use function array_filter;
 use function array_key_exists;
@@ -26,6 +29,7 @@ use function count;
 use function explode;
 use function func_get_args;
 use function func_num_args;
+use function get_object_vars;
 use function implode;
 use function in_array;
 use function is_a;
@@ -34,11 +38,11 @@ use function is_bool;
 use function is_callable;
 use function is_float;
 use function is_int;
-use function is_numeric;
+use function is_nan;
 use function is_object;
 use function is_string;
 use function max;
-use function property_exists;
+use function spl_object_id;
 use function strpos;
 use function substr;
 
@@ -200,6 +204,10 @@ function complement(callable $fn): callable
  */
 function compose(callable ...$args): callable
 {
+    if ($args === []) {
+        throw new InvalidArgumentException('compose requires at least one argument');
+    }
+
     return pipe(...reverse($args));
 }
 
@@ -276,6 +284,8 @@ function curry1(callable $fn): callable
         }
     };
 
+    _curriedArity($_curry1, 1);
+
     return $_curry1;
 }
 
@@ -300,6 +310,8 @@ function curry2(callable $fn): callable
                 return call_user_func_array($fn, [$args[0], $args[1]]);
         }
     };
+
+    _curriedArity($_curry2, 2);
 
     return $_curry2;
 }
@@ -330,6 +342,8 @@ function curry3(callable $fn): callable
                 return call_user_func_array($fn, [$args[0], $args[1], $args[2]]);
         }
     };
+
+    _curriedArity($_curry3, 3);
 
     return $_curry3;
 }
@@ -365,6 +379,8 @@ function curry4(callable $fn): callable
                 return call_user_func_array($fn, [$args[0], $args[1], $args[2], $args[3]]);
         }
     };
+
+    _curriedArity($_curry4, 4);
 
     return $_curry4;
 }
@@ -405,6 +421,8 @@ function curry5(callable $fn): callable
                 return call_user_func_array($fn, [$args[0], $args[1], $args[2], $args[3], $args[4]]);
         }
     };
+
+    _curriedArity($_curry5, 5);
 
     return $_curry5;
 }
@@ -497,21 +515,21 @@ function drop(mixed ...$args): mixed
 function emptyVal(mixed ...$args): mixed
 {
     $_emptyVal = static function ($value) {
-        if (is_callable($value)) {
-            return static function (): void {
-            };
-        }
-
-        if (is_object($value)) {
-            return new stdClass();
+        if (is_string($value)) {
+            return '';
         }
 
         if (is_array($value)) {
             return [];
         }
 
-        if (is_string($value)) {
-            return '';
+        if (is_object($value) && is_callable($value)) {
+            return static function (): void {
+            };
+        }
+
+        if (is_object($value)) {
+            return new stdClass();
         }
 
         if (is_int($value)) {
@@ -533,57 +551,58 @@ function emptyVal(mixed ...$args): mixed
 }
 
 /**
- * Returns the empty value of its argument's type.
+ * Deep equality, see the docblock inside.
  *
- * @category Function
+ * @category Relation
  */
 function equals(mixed ...$args): callable|bool
 {
-    $compare = static function ($actual, $expected) use (&$compare): bool {
-        if (is_object($actual)) {
-            $actual = (array) $actual;
+    /**
+     * Deep equality: scalars are compared strictly (unlike in Ramda, `1` and `1.0` differ, as PHP has separate int and
+     * float types), `NAN` equals `NAN` like in Ramda, arrays by key (list order matters, order of string keys
+     * doesn't), objects only if they are of the same class and all their properties are equal. Closures are
+     * compared by identity. Cyclic object graphs are supported.
+     */
+    $compare = static function ($actual, $expected, array &$seen) use (&$compare): bool {
+        if ($actual === $expected) {
+            return true;
         }
 
-        if (is_object($expected)) {
+        if (is_float($actual) && is_float($expected) && is_nan($actual) && is_nan($expected)) {
+            return true;
+        }
+
+        if (is_object($actual) || is_object($expected)) {
+            if (!is_object($actual) || !is_object($expected)) {
+                return false;
+            }
+
+            if ($actual::class !== $expected::class || $actual instanceof Closure) {
+                return false;
+            }
+
+            // a pair that is already being compared further up is assumed equal, which ends cycles
+            $pair = spl_object_id($actual) . ':' . spl_object_id($expected);
+            if (isset($seen[$pair])) {
+                return true;
+            }
+
+            $seen[$pair] = true;
+
+            $actual = (array) $actual;
             $expected = (array) $expected;
         }
 
-        if (!is_array($expected) || !is_array($actual)) {
-            return $actual === $expected;
+        if (!is_array($actual) || !is_array($expected)) {
+            return false;
         }
 
-        foreach ($expected as $key => $value) {
-            if (is_numeric($key)) {
-                $match = false;
-                foreach ($actual as $otherKey => $otherValue) {
-                    if (is_numeric($otherKey) && $compare($value, $otherValue)) {
-                        $match = true;
-                        break;
-                    }
-                }
-
-                if (!$match) {
-                    return false;
-                }
-            } elseif (!array_key_exists($key, $actual) || !$compare($actual[$key], $expected[$key])) {
-                return false;
-            }
+        if (count($actual) !== count($expected)) {
+            return false;
         }
 
         foreach ($actual as $key => $value) {
-            if (is_numeric($key)) {
-                $match = false;
-                foreach ($expected as $otherKey => $otherValue) {
-                    if (is_numeric($otherKey) && $compare($value, $otherValue)) {
-                        $match = true;
-                        break;
-                    }
-                }
-
-                if (!$match) {
-                    return false;
-                }
-            } elseif (!array_key_exists($key, $expected) || !$compare($actual[$key], $expected[$key])) {
+            if (!array_key_exists($key, $expected) || !$compare($value, $expected[$key], $seen)) {
                 return false;
             }
         }
@@ -592,7 +611,9 @@ function equals(mixed ...$args): callable|bool
     };
 
     $_equals = static function ($a, $b) use ($compare) {
-        return $compare($a, $b);
+        $seen = [];
+
+        return $compare($a, $b, $seen);
     };
 
     return curry2($_equals)(...$args);
@@ -609,7 +630,9 @@ function filter(mixed ...$args): mixed
      * Returns a new list containing only those items that match a given predicate function. The predicate function is
      * passed one argument: (value).
      *
-     * @param callable $callable (value, key)
+     * The key is passed as second argument only if the predicate accepts it.
+     *
+     * @param callable $callable (value[, key])
      * @param mixed[]  $list
      *
      * @return mixed[]
@@ -617,7 +640,11 @@ function filter(mixed ...$args): mixed
      * @category List
      */
     $_filter = static function (callable $callable, array $list) {
-        return array_filter($list, $callable, ARRAY_FILTER_USE_BOTH);
+        if (_acceptsArgs($callable, 2)) {
+            return array_filter($list, $callable, ARRAY_FILTER_USE_BOTH);
+        }
+
+        return array_filter($list, $callable);
     };
 
     return curry2($_filter)(...$args);
@@ -633,7 +660,8 @@ function filter(mixed ...$args): mixed
 function flip(callable $callable, ?int $arity = null) // phpcs:ignore
 {
     if ($arity === null) {
-        $arity = _getArity($callable);
+        // a variadic or unary callable still gets its first two arguments flipped
+        $arity = max(2, _getArity($callable));
     }
 
     return curryN($arity, static function () use ($callable) {
@@ -672,19 +700,26 @@ function identity(mixed ...$args): mixed
 /** @return callable|mixed */
 function ifElse(mixed ...$args): callable
 {
+    /**
+     * Creates a function that calls $onTrue if $condition is satisfied, $onFalse otherwise.
+     * A null branch returns the first argument unchanged.
+     */
     $_ifElse = static function (callable $condition, callable|null $onTrue, callable|null $onFalse) {
+        $arity = max(
+            _getArity($condition),
+            $onTrue !== null ? _getArity($onTrue) : 0,
+            $onFalse !== null ? _getArity($onFalse) : 0,
+        );
+
+        $identity = static fn (...$args) => $args[0] ?? null;
+        $onTrue ??= $identity;
+        $onFalse ??= $identity;
+
         $__ifElse = static function (...$args) use ($condition, $onTrue, $onFalse) {
-            return $condition(...$args) ? $onTrue(...$args) :  $onFalse(...$args);
+            return $condition(...$args) ? $onTrue(...$args) : $onFalse(...$args);
         };
 
-        return curryN(
-            max(
-                $condition ? _getArity($condition) : 0,
-                $onTrue ? _getArity($onTrue) : 0,
-                $onFalse ? _getArity($onFalse) : 0,
-            ),
-            $__ifElse,
-        );
+        return curryN($arity, $__ifElse);
     };
 
     return curry3($_ifElse)(...$args);
@@ -800,15 +835,10 @@ function multiply(mixed ...$args): mixed
      * @return int|float The result of `$a * $b`.
      */
     $_multiply = static function ($a, $b) {
-        if (!$a) {
-            return 0;
-        }
+        // null, false and '' count as 0; numbers keep their type, so multiply(0.0, 1.5) is 0.0
+        $orZero = static fn ($value) => $value === null || $value === false || $value === '' ? 0 : $value;
 
-        if (!$b) {
-            return 0;
-        }
-
-        return $a * $b;
+        return $orZero($a) * $orZero($b);
     };
 
     return curry2($_multiply)(...$args);
@@ -898,6 +928,10 @@ function paths(mixed ...$args): mixed
 
 function pipe(mixed ...$args): mixed
 {
+    if ($args === []) {
+        throw new InvalidArgumentException('pipe requires at least one argument');
+    }
+
     return _arity(
         _getArity($args[0]),
         reduce('\Fnc\_pipe', $args[0], tail($args)),
@@ -928,8 +962,9 @@ function prop(mixed ...$args): mixed
         }
 
         if (is_object($item)) {
-            if (property_exists($item, $key)) {
-                return $item->$key;
+            $vars = get_object_vars($item);
+            if (array_key_exists($key, $vars)) {
+                return $vars[$key];
             }
         }
 
@@ -946,9 +981,9 @@ function reduce(mixed ...$args): mixed
      * function and passing it an accumulator value and the current value from the array, and
      * then passing the result to the next call.
      *
-     * The iterator function receives three values: (accumulator, value, key)
+     * The iterator function receives (accumulator, value) and, if it accepts a third argument, the key.
      *
-     * @param callable $fn ($acc, $value)
+     * @param callable $fn ($acc, $value[, $key])
      * @param mixed    $acc
      * @param mixed[]  $list
      *
@@ -957,8 +992,9 @@ function reduce(mixed ...$args): mixed
      * @category List
      */
     $_reduce = static function (callable $fn, $acc, array $list) {
+        $withKey = _acceptsArgs($fn, 3);
         foreach ($list as $key => $value) {
-            $acc = apply($fn, [$acc, $value, $key]);
+            $acc = $withKey ? $fn($acc, $value, $key) : $fn($acc, $value);
         }
 
         return $acc;
@@ -1087,6 +1123,67 @@ function unapply(callable $fn): callable
  */
 function _getArity(mixed $callable): int
 {
+    if ($callable instanceof Closure) {
+        $arity = _curriedArity($callable);
+        if ($arity !== null) {
+            return $arity;
+        }
+    }
+
+    return _reflectCallable($callable)->getNumberOfParameters();
+}
+
+/**
+ * Remembers (with $arity) or looks up (without) the arity of a curried closure. Curried closures read their
+ * arguments via func_get_args() and therefore declare no parameters, so reflection can't tell their arity.
+ */
+function _curriedArity(Closure $fn, int|null $arity = null): int|null
+{
+    /** @var WeakMap<Closure, int> $arities */
+    static $arities = new WeakMap();
+
+    if ($arity !== null) {
+        $arities[$fn] = $arity;
+
+        return $arity;
+    }
+
+    return $arities[$fn] ?? null;
+}
+
+/**
+ * Whether the callable can safely be called with $n arguments without dropping or rejecting them.
+ * Internal functions only count their required parameters, so optional parameters (like trim()'s $characters)
+ * don't receive unrelated values.
+ *
+ * @throws RuntimeException
+ */
+function _acceptsArgs(callable $callable, int $n): bool
+{
+    // curried closures read their arguments via func_get_args() and declare no parameters
+    if ($callable instanceof Closure) {
+        $arity = _curriedArity($callable);
+        if ($arity !== null) {
+            return $arity >= $n;
+        }
+    }
+
+    $r = _reflectCallable($callable);
+
+    if ($r->isVariadic()) {
+        return true;
+    }
+
+    if ($r->isInternal()) {
+        return $r->getNumberOfRequiredParameters() >= $n;
+    }
+
+    return $r->getNumberOfParameters() >= $n;
+}
+
+/** @throws RuntimeException */
+function _reflectCallable(mixed $callable): ReflectionFunctionAbstract
+{
     $r = false;
     if (is_array($callable)) {
         $r = new ReflectionMethod($callable[0], $callable[1]);
@@ -1109,7 +1206,7 @@ function _getArity(mixed $callable): int
         throw new RuntimeException('Could not examine callback');
     }
 
-    return count($r->getParameters());
+    return $r;
 }
 
 /**

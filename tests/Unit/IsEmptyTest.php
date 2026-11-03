@@ -68,4 +68,18 @@ final class IsEmptyTest extends TestCase
 
         $this->assertTrue($result);
     }
+
+    public function testClosure(): void
+    {
+        $result = isEmpty(static fn () => 42);
+
+        $this->assertFalse($result);
+    }
+
+    public function testCallableString(): void
+    {
+        $result = isEmpty('trim');
+
+        $this->assertFalse($result);
+    }
 }

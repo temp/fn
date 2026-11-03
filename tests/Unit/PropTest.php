@@ -72,4 +72,25 @@ final class PropTest extends TestCase
 
         $this->assertNull($result);
     }
+
+    public function testNonPublicObjectPropertyIsNotAccessible(): void
+    {
+        $data = new class {
+            public string $visible = 'yes';
+            private string $hidden = 'no'; // phpcs:ignore
+            protected string $guarded = 'no'; // phpcs:ignore
+        };
+
+        $this->assertSame('yes', prop('visible', $data));
+        $this->assertNull(prop('hidden', $data));
+        $this->assertNull(prop('guarded', $data));
+    }
+
+    public function testObjectPropertyWithNullValue(): void
+    {
+        $data = new stdClass();
+        $data->foo = null;
+
+        $this->assertNull(prop('foo', $data));
+    }
 }
