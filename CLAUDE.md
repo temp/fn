@@ -57,8 +57,9 @@ function foo(mixed ...$args): mixed
 ## Semantics decisions (don't silently change)
 
 - `equals`: strict like Ramda – list order and length matter, associative key order doesn't, objects need the same
-  class, closures compare by identity.
-- `divide`: like Ramda – `null` counts as 0, division by zero returns `INF`/`-INF`/`NAN` via `fdiv()`.
+  class, closures compare by identity, `NAN` equals `NAN`, cycles are handled. Unlike Ramda, `1` and `1.0` differ.
+- `divide`: like Ramda – `null`, `false` and `''` count as 0, division by zero (also `'0'`) returns `INF`/`-INF`/`NAN`
+  via `fdiv()`.
 - `isEmpty(0)` and `isEmpty(null)` are `true` (differs from Ramda).
 - `filter` and `map` preserve keys.
 - `ifElse` treats a `null` branch as identity of the first argument.
@@ -74,13 +75,18 @@ function foo(mixed ...$args): mixed
 
 - PHP `^8.4`, `declare(strict_types=1)`, global functions imported with `use function`.
 - Every bug fix gets a regression test that fails without the fix.
+- `_acceptsArgs()` and `_getArity()` must both check `_curriedArity()` first, otherwise curried callbacks look
+  like zero-parameter functions.
 - Conventional Commits are required: semantic-release (`.releaserc`, `.github/workflows/release.yaml`) creates tags
-  without `v` prefix (`0.8.0`) and GitHub releases from commits on `main`. `fix:` → patch, `feat:` → minor.
-  Avoid `!` / `BREAKING CHANGE` footers while the API is 0.x – they would trigger 1.0.0.
+  without `v` prefix (`1.0.0`) and GitHub releases from commits on `main`. `fix:` → patch, `feat:` → minor,
+  `BREAKING CHANGE:` footer → major. The default (angular) preset ignores a bare `!` in the header, so always add
+  the footer. Only mark real breaking changes, 1.x is meant to stay stable.
+- Releases run after a green "Build" on main (`workflow_run`). semantic-release is pinned in `release.yaml`; bump it
+  deliberately. Merge PRs with a merge commit, a squash keeps only the PR title.
 - `main` is protected by a ruleset: changes go through pull requests with green CI checks.
 
 ## Outlook
 
-PHP 8.6 adds partial function application (`foo(?, 'x')`). Together with the pipe operator `|>` (PHP 8.5) it
-covers much of what auto-currying does here. Whether a future 1.0 API keeps auto-currying or switches to typed
-signatures is still open.
+1.x is the curried API for PHP 8.4 and 8.5. PHP 8.6 adds partial function application (`foo(?, 'x')`), which
+together with the pipe operator `|>` (PHP 8.5) covers much of what auto-currying does here. A possible 2.0 requiring
+PHP 8.6 could switch to typed signatures without auto-currying; that decision is still open.
