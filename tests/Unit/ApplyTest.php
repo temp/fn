@@ -34,4 +34,12 @@ final class ApplyTest extends TestCase
 
         $this->assertSame(99, $result);
     }
+
+    public function testVariadicFunction(): void
+    {
+        $collect = static fn (mixed ...$args) => $args;
+
+        $this->assertSame([1, 2, 3], apply($collect, [1, 2, 3]));
+        $this->assertSame([], apply($collect, []));
+    }
 }

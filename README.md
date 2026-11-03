@@ -296,6 +296,8 @@ Functions prefixed with an underscore (`_getArity()`, `_arity()`, …) are inter
 - **`uniq()`** compares each element with all kept ones, which is quadratic. For large lists of scalars,
   `array_unique()` is faster.
 - **`isEmpty()`** differs from Ramda for `0` and `null`, which are considered empty here.
+- **Strings** in `head()`, `tail()`, `last()`, `nth()`, `take()`, `drop()` and `slice()` are handled byte-wise like
+  `substr()`, so multibyte characters such as `Ä` can be cut in half.
 - **`filter()`** keeps the keys of the input. Use `array_values()` if you need a list again.
 - **Callbacks** for `filter()` and `reduce()` only receive the key when they declare a parameter for it, so internal
   functions such as `is_numeric` or `trim` can be passed directly.
