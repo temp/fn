@@ -32,8 +32,8 @@ $adultNames([
 composer require temp/fnc
 ```
 
-The package was called `temp/fn` up to 1.0, so versions 1.0 and older are only available under that name. `temp/fnc`
-replaces `temp/fn`, Composer never installs both. The namespace `Fnc` is unchanged.
+The package was called `temp/fn` up to 1.0 and is abandoned in favour of `temp/fnc`, which also provides the older
+versions. `temp/fnc` replaces `temp/fn`, Composer never installs both. The namespace `Fnc` is unchanged.
 
 Requires PHP 8.4 or later. The functions are loaded via Composer's `files` autoloading, so importing them with
 `use function Fnc\…;` is all you need.
