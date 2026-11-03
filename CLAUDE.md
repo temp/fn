@@ -30,9 +30,16 @@ coding standard version reports different violations.
 Public curried functions follow this pattern; keep it for new functions:
 
 ```php
+/**
+ * What the function does.
+ *
+ * Signature: `foo(callable $fn, array $list)`, curried.
+ *
+ * @category List
+ * @example  foo($fn, [1, 2]);
+ */
 function foo(mixed ...$args): mixed
 {
-    /** docblock describing the function */
     $_foo = static function (callable $fn, array $list) {
         // implementation
     };
@@ -40,6 +47,10 @@ function foo(mixed ...$args): mixed
     return curry2($_foo)(...$args);
 }
 ```
+
+- The docblock goes above the function so IDEs and phpstan see it. No `@param`/`@return` tags: the real parameters
+  are `mixed ...$args`, and a narrower `@return` would be wrong for partial calls (which return a closure).
+  Describe the curried parameters in the `Signature:` line instead.
 
 - Argument order is "data last" like Ramda.
 - `curry1()`…`curry5()` read arguments via `func_get_args()` and declare no parameters, so reflection can't see
