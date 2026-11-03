@@ -35,7 +35,7 @@ jobs:
         run: "composer validate --strict"
 
       - name: "Install dependencies"
-        uses: "ramsey/composer-install@v3"
+        uses: "ramsey/composer-install@v4"
 
       - name: "Audit dependencies"
         run: "composer audit"
@@ -86,7 +86,7 @@ jobs:
           php-version: "${{ matrix.php-version }}"
 
       - name: "Install dependencies"
-        uses: "ramsey/composer-install@v3"
+        uses: "ramsey/composer-install@v4"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 
