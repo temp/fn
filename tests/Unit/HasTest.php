@@ -31,6 +31,7 @@ final class HasTest extends TestCase
     public function testNonPublicProperty(): void
     {
         $object = new class {
+            // @phpstan-ignore property.onlyWritten
             private string $hidden = 'x'; // phpcs:ignore
         };
 

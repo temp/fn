@@ -84,7 +84,7 @@ function add(mixed ...$args): mixed
  *
  * @category List
  */
-function all(mixed ...$args): bool|callable
+function all(mixed ...$args): mixed
 {
     $_all = static function (callable $fn, array $list) {
         foreach ($list as $item) {
@@ -145,7 +145,7 @@ function always(mixed $arg): callable
  *
  * @category List
  */
-function any(mixed ...$args): bool|callable
+function any(mixed ...$args): mixed
 {
     $_any = static function (callable $fn, array $list) {
         foreach ($list as $item) {
@@ -363,7 +363,7 @@ function chain(mixed ...$args): mixed
 function complement(callable $fn): callable
 {
     return static function (...$args) use ($fn): bool {
-        return not($fn(...$args));
+        return !$fn(...$args);
     };
 }
 
@@ -445,7 +445,7 @@ function cond(mixed ...$args): mixed
  *
  * @category List
  */
-function contains(mixed ...$args): bool|callable
+function contains(mixed ...$args): mixed
 {
     $_contains = static function ($needle, array $list) {
         return in_array($needle, $list, true);
@@ -856,7 +856,7 @@ function emptyVal(mixed ...$args): mixed
  * doesn't), objects only if they are of the same class and all their properties are equal. Closures are
  * compared by identity. Cyclic object graphs are supported.
  */
-function equals(mixed ...$args): callable|bool
+function equals(mixed ...$args): mixed
 {
     $compare = static function ($actual, $expected, array &$seen) use (&$compare): bool {
         if ($actual === $expected) {
@@ -1163,8 +1163,6 @@ function identity(mixed ...$args): mixed
  * A null branch returns the first argument unchanged.
  *
  * Signature: `ifElse(callable $condition, callable|null $onTrue, callable|null $onFalse)`, curried.
- *
- * @return callable|mixed
  */
 function ifElse(mixed ...$args): callable
 {
@@ -1242,10 +1240,10 @@ function includes(mixed ...$args): mixed
  *
  * @category Logic
  */
-function isEmpty(mixed ...$args): callable|bool
+function isEmpty(mixed ...$args): mixed
 {
     $_isEmpty = static function ($value): bool {
-        return equals($value, emptyVal($value));
+        return equals($value, emptyVal($value)) === true;
     };
 
     return curry1($_isEmpty)(...$args);
@@ -1515,7 +1513,7 @@ function multiply(mixed ...$args): mixed
  *
  * @category List
  */
-function none(mixed ...$args): callable|bool
+function none(mixed ...$args): mixed
 {
     $_none = static function (callable $fn, array $list) {
         return all(complement($fn), $list);
@@ -1532,7 +1530,7 @@ function none(mixed ...$args): callable|bool
  *
  * @category Logic
  */
-function not(mixed ...$args): callable|bool
+function not(mixed ...$args): mixed
 {
     $_not = static function ($value) {
         return !$value;
@@ -1642,7 +1640,7 @@ function path(mixed ...$args): mixed
 function pathEq(mixed ...$args): mixed
 {
     $_pathEq = static function ($value, array $pathArray, $item): bool {
-        return equals(path($pathArray, $item), $value);
+        return equals(path($pathArray, $item), $value) === true;
     };
 
     return curry3($_pathEq)(...$args);
@@ -1814,7 +1812,7 @@ function prop(mixed ...$args): mixed
 function propEq(mixed ...$args): mixed
 {
     $_propEq = static function ($value, string|int $key, $item): bool {
-        return equals(prop($key, $item), $value);
+        return equals(prop($key, $item), $value) === true;
     };
 
     return curry3($_propEq)(...$args);
@@ -2042,6 +2040,10 @@ function sortWith(mixed ...$args): mixed
 function split(mixed ...$args): mixed
 {
     $_split = static function (string $separator, string $list) {
+        if ($separator === '') {
+            throw new InvalidArgumentException('split requires a non-empty separator');
+        }
+
         return explode($separator, $list);
     };
 

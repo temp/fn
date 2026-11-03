@@ -17,7 +17,7 @@ Ramda-inspired functional programming library for PHP (`Fnc` namespace). See REA
 ```bash
 vendor/bin/phpunit                     # tests
 vendor/bin/phpunit --filter EqualsTest # single test class
-vendor/bin/phpstan analyze             # static analysis (level 1)
+vendor/bin/phpstan analyze             # static analysis (level 8)
 vendor/bin/phpcs                       # coding standard (brainbits/phpcs-standard), phpcbf to fix
 ```
 
