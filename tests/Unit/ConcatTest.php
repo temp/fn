@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
@@ -22,12 +23,23 @@ final class ConcatTest extends TestCase
         $this->assertEquals([1, 2], concat([1, 2], []));
     }
 
-    public function testAssociativeArrayValues(): void
+    public function testKeysAreNotPreserved(): void
     {
-        $a = [1, 2];
-        $b = [1, 'b' => 'c'];
-        $this->assertEquals([1, 2, 1], concat($a, [1]));
-        $this->assertEquals([1, 'b' => 'c', 1], concat($b, [1]));
-        $this->assertEquals([1, 'b' => 'c'], concat($b, ['b' => 'c']));
+        $this->assertSame([1, 'c', 1], concat([1, 'b' => 'c'], [1]));
+        $this->assertSame([1, 'c', 'd'], concat([1, 'b' => 'c'], ['b' => 'd']));
+        $this->assertSame([1, 2], concat([5 => 1], [9 => 2]));
+    }
+
+    public function testStrings(): void
+    {
+        $this->assertSame('abcd', concat('ab', 'cd'));
+        $this->assertSame('abcd', concat('ab')('cd'));
+    }
+
+    public function testMixedTypes(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        concat('ab', ['c']);
     }
 }
