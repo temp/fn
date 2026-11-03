@@ -142,6 +142,10 @@ $toDto(['id' => 7, 'wheelhotel_id' => 'W1', 'wheelhotel_name' => 'North', 'rim_b
 ```
 
 Keys only read by callables (`rim_brand_*` above) stay in the record; combine with `omit()` if they should go.
+Note that an `omit()` after `remap()` runs on the result, so don't list keys the spec produces there.
+
+When migrating from `converge(merge(), [applySpec([...]), omit([...])])`: there, a record key that wasn't omitted won
+over a computed key of the same name. With `remap()` the computed key wins.
 Because strings are always keys, pass named functions as closures (`trim(...)`). Arrays are always nested specs,
 so wrap array callables like `[$object, 'method']` in a closure as well.
 
@@ -154,11 +158,11 @@ More complete examples are in the [`examples/`](examples) directory, run them e.
 | `06-content-type.php` | Deriving a MIME type with `split`, `last`, `cond` and `flip(includes())` |
 | `07-jira-issue-to-dto.php` | An issue tracker ticket with custom fields mapped to a DTO: `path`, unit conversions with `flip(divide())`, `converge`, `unless`/`ifElse` for optional values, `filter`/`pick` on nested lists |
 | `08-optional-groups.php` | Outputting a group of fields only if one of them is filled |
-| `09-list-processing.php` | Lists of records: `filter`/`reject`/`partition`, `find`, `pluck`, `sortBy`, `groupBy`, `uniq`, `chain`/`flatten`, `nth`, `head`/`tail`, `any`/`none`, `mean`, `reduce` |
+| `09-list-processing.php` | Lists of records: `filter`/`reject`/`partition`, `find`, `pluck`, `sortBy`, `groupBy`, `uniq`, `chain`/`flatten`, `nth`, `head`/`tail`, `all`/`any`/`none`, `sortWith` with `ascend`/`descend`, `mean`, `reduce` |
 | `10-currying.php` | Partial application, argument order, `flip`, `curryN`/`curry2`, curried math (`min`/`max`, `inc`/`dec`, `multiply`/`divide`), `identity`, `apply` |
 | `11-conditions.php` | Predicates and defaults: `propEq`/`pathEq`, `gt`/`lt`, `allPass`/`anyPass`, `both`/`either`, `has`, `not`, `propSatisfies`/`pathSatisfies`, `cond`, `when`/`unless`, `propOr`/`pathOr`/`defaultTo`, `logicAnd`/`logicOr`/`logicXor`, `emptyVal`/`isEmpty` |
 | `12-updating-records.php` | Immutable updates with `evolve`, `assoc`, `assocPath`, `pick`, `omit`, `tap`; reading with `keys`/`values`, `path`/`paths`; `concat` |
-| `13-remap-database-record.php` | Turning flat SQL rows into nested DTOs with `remap`, `propSatisfies`, `slice`, `sortWith` |
+| `13-remap-database-record.php` | Turning flat SQL rows into nested DTOs with `remap`, `propSatisfies`, `slice`, `sortWith` with `ascendWith`/`descendWith` |
 
 ## Functions
 
@@ -171,13 +175,15 @@ C = curried.
 | `always($value)` | | Returns a function that always returns `$value`. |
 | `apply($fn, $args)` | ✓ | Calls `$fn` with the elements of `$args` as arguments. |
 | `applySpec($spec)` | ✓ | Returns a function that builds an array shaped like `$spec`, applying each function in it to the arguments. |
-| `ascend($fn, $a, $b)` | ✓ | Comparator for `sortWith()`: `$fn($a) <=> $fn($b)`. |
+| `ascend($fn, $a, $b)` | ✓ | Comparator for `sortWith()`: `$fn($a) <=> $fn($b)` (numeric strings compare numerically). |
+| `ascendWith($compare, $fn, $a, $b)` | ✓ | Like `ascend()`, but compares with `$compare`, e.g. `strcmp(...)` for byte-wise string order. |
 | `complement($fn)` | | Returns a function returning the negated result of `$fn`. |
 | `compose(...$fns)` | | Right-to-left composition. The rightmost function may have any arity, the others must be unary. |
 | `converge($after, $fns)` | ✓ | Applies all `$fns` to the arguments and passes their results to `$after`. |
 | `curry1($fn)` … `curry5($fn)` | | Curries a function of arity 1 to 5. |
 | `curryN($arity, $fn)` | | Curries `$fn` with the given arity (0 to 5). |
 | `descend($fn, $a, $b)` | ✓ | Comparator for `sortWith()`: `$fn($b) <=> $fn($a)`. |
+| `descendWith($compare, $fn, $a, $b)` | ✓ | Like `descend()`, but compares with `$compare`. |
 | `flip($fn, $arity = null)` | | Returns `$fn` with the first two arguments swapped, curried. |
 | `identity($value)` | ✓ | Returns `$value`. |
 | `pipe(...$fns)` | | Left-to-right composition. The first function may have any arity, the others must be unary. |

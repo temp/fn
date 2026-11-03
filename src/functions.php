@@ -253,7 +253,9 @@ function applySpec(mixed $spec): mixed
 }
 
 /**
- * Comparator for `sortWith()`: compares two values by the result of the function, ascending.
+ * Comparator for `sortWith()`: compares two values by the result of the function, ascending, with `<=>`. Note that
+ * `<=>` compares numeric strings numerically (`'9999' < '10000'`); use `ascendWith(strcmp(...), $fn)` for byte-wise
+ * string order.
  *
  * Signature: `ascend(callable $fn, $a, $b): int`, curried.
  *
@@ -267,6 +269,24 @@ function ascend(mixed ...$args): mixed
     };
 
     return curry3($_ascend)(...$args);
+}
+
+/**
+ * Comparator for `sortWith()` like `ascend()`, but compares the results of the function with the given comparison
+ * function, e.g. `strcmp(...)` for byte-wise string order or `strnatcasecmp(...)`.
+ *
+ * Signature: `ascendWith(callable $compare, callable $fn, $a, $b): int`, curried.
+ *
+ * @category Function
+ * @example  sortWith([ascendWith(strcmp(...), prop('carhouse_id')), ascendWith(strcmp(...), prop('id'))], $records);
+ */
+function ascendWith(mixed ...$args): mixed
+{
+    $_ascendWith = static function (callable $compare, callable $fn, $a, $b): int {
+        return $compare($fn($a), $fn($b));
+    };
+
+    return curry4($_ascendWith)(...$args);
 }
 
 /**
@@ -744,6 +764,23 @@ function descend(mixed ...$args): mixed
     };
 
     return curry3($_descend)(...$args);
+}
+
+/**
+ * Comparator for `sortWith()` like `descend()`, but compares the results of the function with the given comparison
+ * function, e.g. `strcmp(...)`.
+ *
+ * Signature: `descendWith(callable $compare, callable $fn, $a, $b): int`, curried.
+ *
+ * @category Function
+ */
+function descendWith(mixed ...$args): mixed
+{
+    $_descendWith = static function (callable $compare, callable $fn, $a, $b): int {
+        return $compare($fn($b), $fn($a));
+    };
+
+    return curry4($_descendWith)(...$args);
 }
 
 /**
@@ -1904,7 +1941,9 @@ function reject(mixed ...$args): mixed
  * - callables are called with the whole record and don't remove anything. Strings are always keys, so pass named
  *   functions as closures (`trim(...)`), and wrap array callables (`[$object, 'method']`) in a closure.
  *
- * All other keys of the record are kept. Keys of the spec win over remaining record keys.
+ * All other keys of the record are kept. Keys of the spec win over remaining record keys; with the former
+ * `converge(merge(), [applySpec(...), omit(...)])` pattern a remaining record key won instead. An `omit()` after
+ * `remap()` (e.g. in `pipe()`) runs on the result, so it must not list keys the spec produces.
  *
  * Signature: `remap(array $spec, array $record)`, curried.
  *

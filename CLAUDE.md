@@ -75,11 +75,13 @@ function foo(mixed ...$args): mixed
 - `filter` and `map` preserve keys.
 - `ifElse` treats a `null` branch as identity of the first argument.
 - `propEq` / `pathEq` take the value first (Ramda >= 0.29 order).
-- Curried comparisons take the left operand first: `gt(5)` is "5 > …".
+- Curried comparisons take the left operand first: `gt(5)` is "5 > …". `ascend`/`descend` use `<=>` (numeric strings
+  compare numerically); `ascendWith`/`descendWith` take a comparison function such as `strcmp(...)`.
 - `sortBy`, `sortWith`, `uniq`, `chain`, `flatten` return lists; `filter`, `reject`, `partition`, `pluck` preserve
   keys.
 - `remap` is our own addition, Ramda has no equivalent. Strings in the spec are always record keys (moved and removed), never callables; arrays are nested specs;
-  callables get the whole record and remove nothing. Spec keys win over remaining record keys. Built for the
+  callables get the whole record and remove nothing. Spec keys win over remaining record keys (the old
+  merge/applySpec/omit pattern let record keys win); an `omit()` after `remap()` runs on the result. Built for the
   `converge(merge(), [applySpec(...), omit(...)])` pattern in the consuming projects' SQL read models.
 
 ## Conventions

@@ -4,9 +4,10 @@ include __DIR__.'/../vendor/autoload.php';
 
 use function Fnc\always;
 use function Fnc\applySpec;
-use function Fnc\ascend;
+use function Fnc\ascendWith;
 use function Fnc\converge;
 use function Fnc\descend;
+use function Fnc\descendWith;
 use function Fnc\ifElse;
 use function Fnc\isEmpty;
 use function Fnc\join;
@@ -74,10 +75,15 @@ $toDto = pipe(
     omit(['rim_brand_id', 'rim_brand_name', 'created_date', 'created_time']),
 );
 
-$sorted = sortWith([ascend(prop('carhouse_id')), descend(prop('created_date'))], $rows);
+// ascendWith/descendWith take a comparison function; strcmp sorts strings byte-wise like SQL's binary collation,
+// while ascend/descend use <=>, which compares numeric strings numerically
+$sorted = sortWith([ascendWith(strcmp(...), prop('carhouse_id')), descend(prop('created_date'))], $rows);
+$idsDescending = map(prop('id'), sortWith([descendWith(strcmp(...), prop('id'))], $rows));
 
 echo 'Input:'.PHP_EOL;
 print_r($rows);
 
 echo 'Output:'.PHP_EOL;
 print_r(map($toDto, $sorted));
+
+echo 'IDs descending: ' . implode(', ', $idsDescending) . PHP_EOL;
