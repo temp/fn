@@ -11,6 +11,9 @@
     "require": {
         "php": "^8.4"
     },
+    "replace": {
+        "temp/fn": "self.version"
+    },
     "require-dev": {
         "brainbits/phpcs-standard": "^8.0",
         "brainbits/phpstan-rules": "^4.0",
