@@ -1,6 +1,9 @@
 # fnc
 
-[![Coverage Status](https://img.shields.io/codecov/c/github/temp/fnc)](https://app.codecov.io/gh/temp/fnc)
+[![Build](https://github.com/temp/fnc/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/temp/fnc/actions/workflows/build.yml)
+[![codecov](https://codecov.io/gh/temp/fnc/branch/main/graph/badge.svg)](https://codecov.io/gh/temp/fnc)
+[![Latest Stable Version](https://poser.pugx.org/temp/fnc/version)](https://packagist.org/packages/temp/fnc)
+[![License](https://poser.pugx.org/temp/fnc/license)](https://packagist.org/packages/temp/fnc)
 
 A [Ramda](https://ramdajs.com/)-inspired functional programming library for PHP.
 
