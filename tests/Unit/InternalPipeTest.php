@@ -11,7 +11,7 @@ use function Fnc\_pipe;
 use function round;
 
 #[CoversFunction('Fnc\_pipe')]
-final class _PipeTest extends TestCase
+final class InternalPipeTest extends TestCase
 {
     public function testNumericArrayValue(): void
     {

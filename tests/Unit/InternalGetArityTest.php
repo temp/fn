@@ -17,7 +17,7 @@ use function Fnc\_getArity;
 // phpcs:disable Squiz.Functions.GlobalFunction.Found
 
 #[CoversFunction('Fnc\_getArity')]
-final class _GetArityTest extends TestCase
+final class InternalGetArityTest extends TestCase
 {
     public static function foo(string $x, int $y): void
     {
@@ -25,14 +25,14 @@ final class _GetArityTest extends TestCase
 
     public function testStaticMethodString(): void
     {
-        $result = _getArity('\FncTests\Unit\_GetArityTest::foo');
+        $result = _getArity('\FncTests\Unit\InternalGetArityTest::foo');
 
         $this->assertEquals(2, $result);
     }
 
     public function testStaticMethodArray(): void
     {
-        $result = _getArity(['\FncTests\Unit\_GetArityTest', 'foo']);
+        $result = _getArity(['\FncTests\Unit\InternalGetArityTest', 'foo']);
 
         $this->assertEquals(2, $result);
     }

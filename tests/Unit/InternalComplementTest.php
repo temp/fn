@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 use function Fnc\_complement;
 
 #[CoversFunction('Fnc\_complement')]
-final class _ComplementTest extends TestCase
+final class InternalComplementTest extends TestCase
 {
     public function testNumericArrayValue(): void
     {

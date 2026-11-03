@@ -1,0 +1,50 @@
+# https://help.github.com/en/categories/automating-your-workflow-with-github-actions
+
+name: "Release"
+
+# Runs after a successful "Build" of a push to main, so a red build is never released.
+on:
+  workflow_run:
+    workflows:
+      - "Build"
+    types:
+      - "completed"
+    branches:
+      - "main"
+
+permissions:
+  contents: "write"
+  issues: "write"
+  pull-requests: "write"
+
+concurrency:
+  group: "${{ github.workflow }}"
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: "Create Release"
+
+    runs-on: "ubuntu-latest"
+
+    if: "github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
+        with:
+          # the commit whose build succeeded; if main moved on meanwhile, semantic-release skips this run
+          ref: "${{ github.event.workflow_run.head_sha }}"
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: "Setup Node"
+        uses: "actions/setup-node@v4"
+        with:
+          node-version: "lts/*"
+
+      - name: "Run semantic-release"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        # pinned: the job runs with write access to the repository
+        run: "npx --yes semantic-release@25.0.9"

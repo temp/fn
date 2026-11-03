@@ -1,0 +1,94 @@
+# https://help.github.com/en/categories/automating-your-workflow-with-github-actions
+
+name: "Build"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "main"
+
+permissions:
+  contents: "read"
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: "Composer, Code Style, Static Analysis"
+
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          php-version: "8.5"
+
+      - name: "Validate composer.json"
+        run: "composer validate --strict"
+
+      - name: "Install dependencies"
+        uses: "ramsey/composer-install@v3"
+
+      - name: "Audit dependencies"
+        run: "composer audit"
+
+      - name: "Code Style"
+        run: "vendor/bin/phpcs"
+
+      - name: "Static Analysis"
+        run: "vendor/bin/phpstan analyze --no-progress"
+
+      - name: "Examples"
+        run: |
+          for example in examples/*.php; do
+            echo "Running ${example}"
+            if ! php -d error_reporting=-1 -d display_errors=stderr "${example}" > /dev/null 2> "${RUNNER_TEMP}/errors.txt"; then
+              cat "${RUNNER_TEMP}/errors.txt"
+              exit 1
+            fi
+            if [ -s "${RUNNER_TEMP}/errors.txt" ]; then
+              cat "${RUNNER_TEMP}/errors.txt"
+              exit 1
+            fi
+          done
+
+  tests:
+    name: "Tests (PHP ${{ matrix.php-version }}, ${{ matrix.dependencies }} dependencies)"
+
+    runs-on: "ubuntu-latest"
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version:
+          - "8.4"
+          - "8.5"
+        dependencies:
+          - "lowest"
+          - "highest"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          php-version: "${{ matrix.php-version }}"
+
+      - name: "Install dependencies"
+        uses: "ramsey/composer-install@v3"
+        with:
+          dependency-versions: "${{ matrix.dependencies }}"
+
+      - name: "Tests"
+        run: "vendor/bin/phpunit"
