@@ -7,9 +7,6 @@ namespace Fnc;
 use Closure;
 use InvalidArgumentException;
 use ReflectionFunction;
-use ReflectionFunctionAbstract;
-use ReflectionMethod;
-use ReflectionObject;
 use RuntimeException;
 use stdClass;
 use WeakMap;
@@ -27,23 +24,23 @@ use function array_sum;
 use function call_user_func_array;
 use function count;
 use function explode;
+use function fdiv;
 use function func_get_args;
 use function func_num_args;
 use function get_object_vars;
 use function implode;
 use function in_array;
-use function is_a;
 use function is_array;
 use function is_bool;
 use function is_callable;
 use function is_float;
 use function is_int;
 use function is_nan;
+use function is_numeric;
 use function is_object;
 use function is_string;
 use function max;
 use function spl_object_id;
-use function strpos;
 use function substr;
 
 use const ARRAY_FILTER_USE_BOTH;
@@ -461,20 +458,21 @@ function curryN(int $arity, callable $callable): callable
 function divide(mixed ...$args): mixed
 {
     /**
-     * Divides two numbers. Equivalent to `$a / $b`.
+     * Divides two numbers. Equivalent to `$a / $b`, like Ramda: `null`, `false` and `''` count as 0, and dividing
+     * by zero (also `'0'`) returns INF, -INF or NAN instead of throwing.
      *
-     * @param int|float $a The first value.
-     * @param int|float $b The second value.
+     * @param int|float|string|bool|null $a The first value.
+     * @param int|float|string|bool|null $b The second value.
      *
-     * @return float The result of `$a / $b`.
+     * @return int|float The result of `$a / $b`.
      */
     $_divide = static function ($a, $b) {
-        if ($a === null) {
-            return null;
-        }
+        $orZero = static fn ($value) => $value === null || $value === false || $value === '' ? 0 : $value;
+        $a = $orZero($a);
+        $b = $orZero($b);
 
-        if (!$b) {
-            return null;
+        if (is_numeric($a) && is_numeric($b) && (float) $b === 0.0) {
+            return fdiv((float) $a, (float) $b);
         }
 
         return $a / $b;
@@ -1117,7 +1115,9 @@ function unapply(callable $fn): callable
 }
 
 /**
- * How many arguments the provided callable expects (arity)
+ * How many arguments the provided callable expects (arity): the number of its required parameters, like
+ * Function.length in JavaScript. Optional and variadic parameters don't count, so currying a callable with optional
+ * parameters needs an explicit arity, e.g. curryN(2, $fn).
  *
  * @throws RuntimeException
  */
@@ -1130,7 +1130,7 @@ function _getArity(mixed $callable): int
         }
     }
 
-    return _reflectCallable($callable)->getNumberOfParameters();
+    return _reflectCallable($callable)->getNumberOfRequiredParameters();
 }
 
 /**
@@ -1182,31 +1182,13 @@ function _acceptsArgs(callable $callable, int $n): bool
 }
 
 /** @throws RuntimeException */
-function _reflectCallable(mixed $callable): ReflectionFunctionAbstract
+function _reflectCallable(mixed $callable): ReflectionFunction
 {
-    $r = false;
-    if (is_array($callable)) {
-        $r = new ReflectionMethod($callable[0], $callable[1]);
-    } elseif (is_string($callable)) {
-        if (strpos($callable, '::') !== false) {
-            $tmp = explode('::', $callable);
-            $r = new ReflectionMethod($tmp[0], $tmp[1]);
-        } elseif (is_callable($callable)) {
-            $r = new ReflectionFunction($callable);
-        }
-    } elseif (is_a($callable, Closure::class)) {
-        $objR = new ReflectionObject($callable);
-        $r = $objR->getMethod('__invoke');
-    } elseif (is_object($callable) && is_callable($callable)) {
-        $objR = new ReflectionObject($callable);
-        $r = $objR->getMethod('__invoke');
-    }
-
-    if (!$r) {
+    if (!is_callable($callable)) {
         throw new RuntimeException('Could not examine callback');
     }
 
-    return $r;
+    return new ReflectionFunction(Closure::fromCallable($callable));
 }
 
 /**

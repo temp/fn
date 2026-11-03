@@ -97,6 +97,14 @@ final class InternalGetArityTest extends TestCase
         $this->assertSame(2, _getArity(curry3($fn3)(1)));
         $this->assertSame(1, _getArity(curry3($fn3)(1, 2)));
     }
+
+    public function testOptionalAndVariadicParametersDoNotCount(): void
+    {
+        $this->assertSame(1, _getArity('trim'));
+        $this->assertSame(1, _getArity(static fn ($a, $b = 1) => $a + $b));
+        $this->assertSame(0, _getArity(static fn (...$args) => $args));
+        $this->assertSame(1, _getArity(static fn ($a, ...$rest) => $a));
+    }
 }
 
 function foo(int $x, float $y, string $z): void
