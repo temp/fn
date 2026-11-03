@@ -1,0 +1,46 @@
+# https://help.github.com/en/categories/automating-your-workflow-with-github-actions
+
+name: "Code Coverage"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "main"
+
+permissions:
+  contents: "read"
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  code-coverage:
+    name: "Code Coverage"
+
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v7"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "pcov"
+          php-version: "8.5"
+
+      - name: "Install dependencies"
+        uses: "ramsey/composer-install@v4"
+
+      - name: "Tests with coverage"
+        run: "vendor/bin/phpunit --coverage-clover build/logs/clover.xml"
+
+      - name: "Upload to Codecov"
+        uses: "codecov/codecov-action@v7"
+        with:
+          token: "${{ secrets.CODECOV_TOKEN }}" # not required for public repos
+          files: "build/logs/clover.xml"
+          flags: "unittests"
+          fail_ci_if_error: true
