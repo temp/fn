@@ -4,6 +4,7 @@
 [![codecov](https://codecov.io/gh/temp/fnc/branch/main/graph/badge.svg)](https://codecov.io/gh/temp/fnc)
 [![Latest Stable Version](https://poser.pugx.org/temp/fnc/version)](https://packagist.org/packages/temp/fnc)
 [![License](https://poser.pugx.org/temp/fnc/license)](https://packagist.org/packages/temp/fnc)
+[![Total Downloads](https://img.shields.io/packagist/dt/temp/fnc)](https://packagist.org/packages/temp/fnc)
 
 A [Ramda](https://ramdajs.com/)-inspired functional programming library for PHP.
 
