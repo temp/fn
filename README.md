@@ -1,3 +1,3 @@
-A ramda-inspred functional programming library for PHP.
+A Ramda-inspired functional programming library for PHP.
 
 https://ramdajs.com/
