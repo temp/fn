@@ -33,5 +33,6 @@ final class Curry5Test extends TestCase
         $this->assertEquals(17, $sum4(5, 10, -4)(4, 2));
         $this->assertEquals(17, $sum4(5, 10, -4, 4, 2));
         $this->assertEquals(17, $sum4(5, 10, -4, 4, 2, 8));
+        $this->assertEquals(17, $sum4(5, 10, -4, 4)(2));
     }
 }

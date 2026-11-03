@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FncTests\Unit;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
@@ -81,5 +82,12 @@ final class SplitTest extends TestCase
         $result = split(' ', $data);
 
         $this->assertSame(['foo', 'bar', '1', '2.5'], $result);
+    }
+
+    public function testEmptySeparatorThrows(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        split('', 'foo');
     }
 }
