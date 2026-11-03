@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Ramda-inspired functional programming library for PHP (`Fnc` namespace). See README.md for the public API.
+Ramda-inspired functional programming library for PHP: package `temp/fnc` (until 1.0 `temp/fn`), namespace `Fnc`. See README.md for the public API.
 
 ## Layout
 

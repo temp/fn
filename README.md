@@ -1,4 +1,4 @@
-# fn
+# fnc
 
 A [Ramda](https://ramdajs.com/)-inspired functional programming library for PHP.
 
@@ -27,8 +27,10 @@ $adultNames([
 ## Installation
 
 ```bash
-composer require temp/fn
+composer require temp/fnc
 ```
+
+The package was called `temp/fn` up to 1.0; the namespace `Fnc` is unchanged.
 
 Requires PHP 8.4 or later. The functions are loaded via Composer's `files` autoloading, so importing them with
 `use function Fnc\…;` is all you need.
