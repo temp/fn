@@ -15,6 +15,7 @@ use function array_column;
 use function array_diff_key;
 use function array_filter;
 use function array_key_exists;
+use function array_key_first;
 use function array_key_last;
 use function array_keys;
 use function array_map;
@@ -1068,21 +1069,26 @@ function has(mixed ...$args): mixed
     return curry2($_has)(...$args);
 }
 
-/**
- * Returns the first element of a list, NULL is empty list
- * If the list is an associative array, it will return an array with 1 key=>value
- *
- * @param mixed[] $list
- *
- * @category List
- */
-function head(array $list): mixed
+function head(mixed ...$args): mixed
 {
-    if (!count($list)) {
-        return null;
-    }
+    /**
+     * The first element of a list (`null` if empty, keys are ignored) or the first character of a string.
+     *
+     * @category List
+     */
+    $_head = static function (array|string $list) {
+        if (is_string($list)) {
+            return substr($list, 0, 1);
+        }
 
-    return array_shift($list);
+        if ($list === []) {
+            return null;
+        }
+
+        return $list[array_key_first($list)];
+    };
+
+    return curry1($_head)(...$args);
 }
 
 function identity(mixed ...$args): mixed
@@ -1931,25 +1937,25 @@ function sum(mixed ...$args): mixed
     return curry1($_sum)(...$args);
 }
 
-/**
- * Returns all but the first element of a list.
- * Preserves keys on associative (non-numerical key) arrays
- *
- * @param mixed[] $list
- *
- * @return mixed[]
- *
- * @category List
- */
-function tail(array $list): array
+function tail(mixed ...$args): mixed
 {
-    if (!count($list)) {
-        return [];
-    }
+    /**
+     * All but the first element of a list (string keys are preserved, numeric keys renumbered like
+     * `array_shift()`) or all but the first character of a string.
+     *
+     * @category List
+     */
+    $_tail = static function (array|string $list) {
+        if (is_string($list)) {
+            return substr($list, 1);
+        }
 
-    array_shift($list);
+        array_shift($list);
 
-    return $list;
+        return $list;
+    };
+
+    return curry1($_tail)(...$args);
 }
 
 function take(mixed ...$args): mixed

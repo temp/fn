@@ -195,7 +195,7 @@ C = curried.
 | `find($predicate, $list)` | ✓ | First matching element, `null` if none. |
 | `flatten($list)` | ✓ | Flattens nested arrays into one list. |
 | `groupBy($fn, $list)` | ✓ | Groups the elements by the key `$fn` returns, each group is a list. |
-| `head($list)` | | First element, `null` for an empty list. |
+| `head($listOrString)` | ✓ | First element (`null` for an empty list) or first character. |
 | `includes($needle, $listOrString)` | ✓ | `true` if the list contains an element equal to `$needle` (in `equals()` terms) or the string contains it. |
 | `join($separator, $list)` | ✓ | `implode()`. |
 | `last($listOrString)` | ✓ | Last element (`null` for an empty list) or last character. |
@@ -213,7 +213,7 @@ C = curried.
 | `sortWith($comparators, $list)` | ✓ | Sorts by several comparators (`ascend()`/`descend()`), the next one breaks ties. Returns a list. |
 | `split($separator, $string)` | ✓ | `explode()`. |
 | `sum($list)` | ✓ | Sum of all elements, `0` for an empty list. |
-| `tail($list)` | | All but the first element. |
+| `tail($listOrString)` | ✓ | All but the first element or character. |
 | `take($n, $listOrString)` | ✓ | The first `$n` elements or characters. |
 | `uniq($list)` | ✓ | Removes duplicates (in `equals()` terms), keeps the first occurrence. Returns a list. |
 

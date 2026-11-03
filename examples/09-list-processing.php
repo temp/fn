@@ -60,9 +60,8 @@ $report = applySpec([
     // chain() maps to lists and concatenates them, flatten() does the same for already nested lists
     'all_items' => pipe(chain(prop('items')), uniq()),
     'item_count' => pipe(pluck('items'), flatten(), 'count'),
-    // head() and tail() are not curried, pass them as first-class callables
-    'first_id' => pipe(pluck('id'), head(...)),
-    'other_ids' => pipe(pluck('id'), tail(...)),
+    'first_id' => pipe(pluck('id'), head()),
+    'other_ids' => pipe(pluck('id'), tail()),
     'ids_newest_first' => pipe(pluck('id'), reverse()),
     // reduce() for anything the other functions don't cover
     'total_per_customer' => reduce(
